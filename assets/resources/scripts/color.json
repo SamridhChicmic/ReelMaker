@@ -1,0 +1,27 @@
+
+
+
+
+{
+    "Color" :
+     [
+    {
+        "id":1,"color":"Black"
+    },
+    {
+        "id":2,"color":"Maroon"
+    },
+    {
+        "id":3,"color":"Red"
+    },
+    {
+        "id":4,"color":"Yellow"
+    },
+    {
+        "id":5,"color":"Blue"
+    }
+  
+  
+    ]
+    
+    }
