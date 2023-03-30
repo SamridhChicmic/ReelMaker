@@ -170,7 +170,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 365.7142857142857,
+    "_orthoHeight": 320,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -318,6 +318,10 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "Slot": {
+      "__uuid__": "c258ab99-2f70-4677-81dc-3d3fa2751630",
+      "__expectedType__": "cc.Prefab"
+    },
     "_id": "6fwIP9nhFKQLegu9lYi6GY"
   },
   {

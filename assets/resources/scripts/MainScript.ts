@@ -3,7 +3,14 @@ const { ccclass, property } = _decorator;
 
 @ccclass("MainScript")
 export class MainScript extends Component {
- 
 
-  update(deltaTime: number) {}
+  @property({ type: Prefab })
+  Slot: Prefab = null;
+
+  protected onLoad(): void {
+    let Slot = instantiate(this.Slot)
+    this.node.addChild(Slot)
+  }
+
+  update(deltaTime: number) { }
 }
