@@ -34,7 +34,7 @@ class Animation {
 
 
                 if (tile.getPosition().y <= -1000) {
-                    tile.setPosition(new Vec3(0, 100 * i, 0));
+                    tile.setPosition(new Vec3(0, 100, 0));
 
                     scrollTween.start()
                 }
