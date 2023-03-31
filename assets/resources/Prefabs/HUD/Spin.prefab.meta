@@ -2,12 +2,12 @@
   "ver": "1.1.43",
   "importer": "prefab",
   "imported": true,
-  "uuid": "b0790c93-fe8a-4d20-a62a-912d9015753f",
+  "uuid": "01d6dfa9-6a23-4320-afe1-8cfa8454d12e",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Machine"
+    "syncNodeName": "Spin"
   }
 }

@@ -8,22 +8,13 @@ export class Tile extends Component {
 
 
 
+    
     start() {
-
-        this.scheduleOnce(() => {
-
-         
-
-
-        }, 2);
-
-
-
 
     }
 
     update(deltaTime: number) {
-        console.log(this.node.getPosition());
+
 
     }
 }
