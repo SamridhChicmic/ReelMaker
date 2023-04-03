@@ -1,4 +1,4 @@
-import { _decorator, animation, Component, director, instantiate, Label, Node, NodePool, Prefab, tween, UITransform, Vec3 } from 'cc';
+import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, tween, UI, UITransform, Vec3 } from 'cc';
 
 const { ccclass, property } = _decorator;
 
@@ -19,10 +19,11 @@ export class reels extends Component {
     reelNumber = -1;
     newTile: Node;
     maskedHeight;
-
-
+    tile;
+    tileAdjustor = 0;
+    noOfTiles = 5;
     protected onLoad(): void {
-        this.maskedHeight = this.reelAnchor.getComponent(UITransform).height - this.node.getComponent(UITransform).height;
+        this.tile = instantiate(this.tilePrefab);
     }
 
 
@@ -34,14 +35,22 @@ export class reels extends Component {
     createReel(reelNum: number): void {
         // let this.newTile: Node;
         this.reelNumber = reelNum;
-        for (let i = 0; i < 5; i++) {
+
+        this.node.getComponent(UITransform).height = ((this.noOfTiles - 2) * this.tile.getComponent(UITransform).height);
+
+        for (let i = 0; i < this.noOfTiles; i++) {
             this.newTile = instantiate(this.tilePrefab);
             if (this.newTile) {
                 this.newTile.getChildByName("tileNum").getComponent(Label).string = (i + 1).toString();
                 this.newTile.name = i.toString();
             }
-
             this.reelAnchor.addChild(this.newTile);
+            this.reelAnchor.getComponent(Layout).updateLayout();
+            // this.reelAnchor.height = 1125;
+            this.maskedHeight = (this.reelAnchor.getComponent(UITransform).height - this.node.getComponent(UITransform).height);
+
+
+
             this.tiles[i] = this.newTile;
 
         }
@@ -55,16 +64,25 @@ export class reels extends Component {
      */
     changeCallback(element: Node = null): void {
         const dirModifier = -1;
-        if (element.position.y > this.maskedHeight + 200) {
+        // console.log("element.position.y", element.position.y);
+        // console.log("this.maskedHeight", this.maskedHeight);
+
+        console.log("Masked Height", this.maskedHeight);
+        let check = 0;
+        if (this.noOfTiles > 5) {
+            check = (element.getComponent(UITransform).height);
+        }
+
+        if (element.position.y > this.maskedHeight + check) {
             console.log("--", element.getChildByName('tileNum').getComponent(Label).string);
-            element.position = new Vec3(-50, this.maskedHeight * dirModifier, 0);
+            element.position = new Vec3(0, (this.maskedHeight * dirModifier) - ((element.getComponent(UITransform).height * (this.noOfTiles % 5)) * 0.5), 0);
         }
     }
 
     /**
      * 
      * @param element 
-     * @description used to check when to stop the spinn of a particular Reel
+     * @description used to check when to stop the spin of a particular Reel
      */
     checkEndCallback(element: Node = null): void {
         console.log(this.stopSpinning);
@@ -104,7 +122,7 @@ export class reels extends Component {
             const delay = tween(element).delay(windUp);
             const start = tween(element).by(
                 0.5,
-                { position: new Vec3(0, (this.maskedHeight), 0) },
+                { position: new Vec3(0, (this.maskedHeight * 0.5), 0) },
                 { easing: "backIn" }
             );
             const doChange = tween().call(() => this.changeCallback(element));
@@ -120,7 +138,7 @@ export class reels extends Component {
 
         tween(element).by(
             0.25,
-            { position: new Vec3(0, (this.maskedHeight * 0.5) * dirModifier, 0) },
+            { position: new Vec3(0, ((this.maskedHeight * 0.5) * dirModifier), 0) },
             { easing: "bounceOut" }
         ).start();
 

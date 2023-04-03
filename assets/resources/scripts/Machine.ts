@@ -15,7 +15,7 @@ export class Machine extends Component {
   start() {
     this.createMachine();
     this.scheduleOnce(this.spin, 1);
-    this.scheduleOnce(this.stop, 3);
+    this.scheduleOnce(this.stop, 4);
   }
 
   /**
