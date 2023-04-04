@@ -1,19 +1,24 @@
 import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite } from "cc";
-import { reels } from "./reels";
+import { ReelSpin } from "./Machine/Reels/ReelSpin";
+import { ANIMATION_TYPES } from "./AnimationTypes";
 const { ccclass, property } = _decorator;
 
 @ccclass("Machine")
 export class Machine extends Component {
 
   @property({ type: Prefab })
-  Reel: Prefab = null;
+  ReelSpin: Prefab = null;
+
+  @property({ type: Prefab })
+  ReelDrop: Prefab = null;
 
   private reels: Node[] = [];
   newReel: Node;
   public numberOfReels = 5;
-
+  Reel: Prefab = null;
+  reelScriptName = null;
   start() {
-    this.createMachine();
+    this.createMachine("ReelSpin");
     this.scheduleOnce(this.spin, 1);
     this.scheduleOnce(this.stop, 4);
   }
@@ -21,13 +26,29 @@ export class Machine extends Component {
   /**
    * @description this function is used to createMachine by adding reels in Machine
    */
-  createMachine() {
+  createMachine(AnimationType) {
     this.reels = [];
+
+    //Deciding which animation will play
+    switch (AnimationType) {
+      case ANIMATION_TYPES.REELSPIN:
+        this.Reel = this.ReelSpin;
+        this.reelScriptName = ANIMATION_TYPES.REELSPIN;
+        break;
+
+      case ANIMATION_TYPES.REELDROP:
+        this.Reel = this.ReelDrop;
+        this.reelScriptName = ANIMATION_TYPES.REELDROP;
+        break;
+
+      default:
+        break;
+    }
     for (let i = 0; i < this.numberOfReels; i++) {
       this.newReel = instantiate(this.Reel);
       this.node.addChild(this.newReel);
       this.reels[i] = this.newReel;
-      const reelScript: any = this.newReel.getComponent(reels);
+      const reelScript: any = this.newReel.getComponent(this.reelScriptName);
       reelScript.createReel(i);
       // reelScript.shuffle();
     }
@@ -39,7 +60,7 @@ export class Machine extends Component {
 
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const spinDelay = i * 1.2;
-      const theReel = this.reels[i].getComponent(reels);
+      const theReel: any = this.reels[i].getComponent(this.reelScriptName);
       this.scheduleOnce(() => {
         theReel.readyStop();
       }, spinDelay);
@@ -51,7 +72,7 @@ export class Machine extends Component {
 
     // this.spinning = true;
     for (let i = 0; i < this.numberOfReels; i += 1) {
-      const theReel = this.reels[i].getComponent(reels);
+      const theReel: any = this.reels[i].getComponent(this.reelScriptName);
       theReel.doSpin(0.03);
     }
   }

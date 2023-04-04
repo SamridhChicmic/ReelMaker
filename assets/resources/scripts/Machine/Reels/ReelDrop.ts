@@ -2,9 +2,8 @@ import { _decorator, animation, Component, director, instantiate, Label, Layers,
 
 const { ccclass, property } = _decorator;
 
-@ccclass('reels')
-export class reels extends Component {
-
+@ccclass('ReelDrop')
+export class ReelDrop extends Component {
     @property({ type: Prefab })
     tilePrefab: Prefab = null;
 
@@ -21,7 +20,7 @@ export class reels extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 5;
+    noOfTiles = 6;
     protected onLoad(): void {
         this.tile = instantiate(this.tilePrefab);
     }
@@ -66,16 +65,17 @@ export class reels extends Component {
         const dirModifier = -1;
         // console.log("element.position.y", element.position.y);
         // console.log("this.maskedHeight", this.maskedHeight);
-
-        console.log("Masked Height", this.maskedHeight);
         let check = 0;
         if (this.noOfTiles > 5) {
             check = (element.getComponent(UITransform).height);
         }
+        let visibleTalesManager = this.noOfTiles % 5;
+        if (this.noOfTiles < 5) {
+            visibleTalesManager = -1;
+        }
 
         if (element.position.y > this.maskedHeight + check) {
-            console.log("--", element.getChildByName('tileNum').getComponent(Label).string);
-            element.position = new Vec3(0, (this.maskedHeight * dirModifier) - ((element.getComponent(UITransform).height * (this.noOfTiles % 5)) * 0.5), 0);
+            element.position = new Vec3(0, (this.maskedHeight * dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
         }
     }
 
@@ -85,7 +85,6 @@ export class reels extends Component {
      * @description used to check when to stop the spin of a particular Reel
      */
     checkEndCallback(element: Node = null): void {
-        console.log(this.stopSpinning);
 
         if (this.stopSpinning) {
             this.doStop(element);
@@ -142,12 +141,17 @@ export class reels extends Component {
             { easing: "bounceOut" }
         ).start();
 
-        console.log("stopped");
+
 
 
     }
 
     update(deltaTime: number) {
+
+    }
+
+    protected start(): void {
+        console.log("Working from ReelDrop");
 
     }
 }
