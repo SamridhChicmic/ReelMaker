@@ -20,7 +20,7 @@ export class ReelDrop extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 6;
+    noOfTiles = 4;
     protected onLoad(): void {
         this.tile = instantiate(this.tilePrefab);
     }
@@ -61,21 +61,22 @@ export class ReelDrop extends Component {
      * @param element 
      * @description this function is used to Reposition the tiles 
      */
-    changeCallback(element: Node = null): void {
+    changeCallback(eelement: Node = null): void {
         const dirModifier = -1;
         // console.log("element.position.y", element.position.y);
         // console.log("this.maskedHeight", this.maskedHeight);
         let check = 0;
         if (this.noOfTiles > 5) {
-            check = (element.getComponent(UITransform).height);
+            check = (eelement.getComponent(UITransform).height);
         }
         let visibleTalesManager = this.noOfTiles % 5;
         if (this.noOfTiles < 5) {
             visibleTalesManager = -1;
         }
-
-        if (element.position.y > this.maskedHeight + check) {
-            element.position = new Vec3(0, (this.maskedHeight * dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
+        // let element = this.reelAnchor.children[0];
+        if (eelement.position.y * dirModifier > this.maskedHeight) {
+            console.log(eelement.getChildByName("tileNum").getComponent(Label).string)
+            eelement.position = new Vec3(0, (this.maskedHeight) + ((eelement.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
         }
     }
 
@@ -84,29 +85,41 @@ export class ReelDrop extends Component {
      * @param element 
      * @description used to check when to stop the spin of a particular Reel
      */
-    checkEndCallback(element: Node = null): void {
+    // checkEndCallback(element: Node = null): void {
 
-        if (this.stopSpinning) {
-            this.doStop(element);
-        } else {
-            this.doSpinning(element);
-        }
-    }
+    //     if (this.stopSpinning) {
+    //         this.doStop(element);
+    //     } else {
 
 
-    doSpinning(element: Node = null, times = 1): void {
-        const dirModifier = -1;
-        const move = tween().by(this.spinSpeed, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
-        const doChange = tween().call(() => {
-            this.changeCallback(element)
-
-        });
-        const repeat = tween(element).repeat(times, move.then(doChange));
-        const checkEnd = tween().call(() => this.checkEndCallback(element));
-        repeat.then(checkEnd).start();
+    //         this.doSpinning(element);
+    //     }
+    // }
 
 
-    }
+    // doSpinning(element: Node = null, times = 1): void {
+
+    //     const dirModifier = -1;
+    //     const move = tween().by(0.8, { position: new Vec3(0, (this.maskedHeight * 2) * dirModifier, 0) }); //time=0.8
+    //     const doChange = tween().call(() => {
+
+    //         this.changeCallback(element)
+
+
+    //     });
+    //     const repeat = tween(element).repeat(times, move.then(doChange));
+    //     const checkEnd = tween().call(() => {
+
+    //         this.checkEndCallback(element);
+
+    //     });
+    //     // const checkEnd = tween().call(() => this.checkEndCallback(element));
+    //     repeat.then(checkEnd).start();
+
+
+
+
+    // }
 
     /**
      * 
@@ -114,30 +127,56 @@ export class ReelDrop extends Component {
      * @description used to spin the tiles using tween
      */
     doSpin(windUp): void {
-        this.reelAnchor.children.forEach((element) => {
-            //    console.log("For Each Element", element);
+        for (let i = this.reelAnchor.children.length - 1; i >= 0; i--) {
+            let element = this.reelAnchor.children[i];
+            let direction = -1;
+            const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
+            const doChange = tween().call(() => { this.changeCallback(element); this.spinAgain() });
+            // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
+            const start = tween(element).by(0.8, { position: new Vec3(0, (this.maskedHeight * 2) * direction, 0) }); //time = 0.8
+            delay.then(start).then(doChange).start(); //then(doChange)
+        }
 
-            const dirModifier = -1;
-            const delay = tween(element).delay(windUp);
-            const start = tween(element).by(
-                0.5,
-                { position: new Vec3(0, (this.maskedHeight * 0.5), 0) },
-                { easing: "backIn" }
-            );
-            const doChange = tween().call(() => this.changeCallback(element));
-            const callSpinning = tween(element).call(() => this.doSpinning(element, 50));
-            delay.then(start).then(doChange).then(callSpinning).start();
-        });
+    }
+    spinAgain() {
+        console.log("spinAgain called");
+
+        for (let i = this.reelAnchor.children.length - 1; i >= 0; i--) {
+            let element = this.reelAnchor.children[i];
+            let direction = -1;
+            const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
+            const doChange = tween().call(() => { this.stopDrop(element, i); });
+            // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
+            const start = tween(element).by(0.8, { position: new Vec3(0, (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction, 0) }); //time = 0.8
+            delay.then(start).then(doChange).start(); //then(doChange)
+        }
     }
 
-    readyStop() { this.stopSpinning = true; }
+    stopDrop(element, i) {
+        let dirModifier = -1;
+        console.log("element.position.y * dirModifier", element.position.y * dirModifier);
 
+        console.log("----", this.maskedHeight - (element.getComponent(UITransform).height * (i)));
+
+        if (element.position.y > this.maskedHeight) { // - (element.getComponent(UITransform).height * (i + 1))
+
+            tween(element).stop()
+        }
+    }
+
+    readyStop() {
+
+        this.stopSpinning = true;
+    }
+    count = 0;
     doStop(element) {
         let dirModifier = -1;
+        this.count++;
+        console.log("wor5king");
 
         tween(element).by(
-            0.25,
-            { position: new Vec3(0, ((this.maskedHeight * 0.5) * dirModifier), 0) },
+            10,
+            { position: new Vec3(0, (((this.maskedHeight * 0.5) * dirModifier) * element.getComponent(UITransform).height * this.count), 0) },
             { easing: "bounceOut" }
         ).start();
 

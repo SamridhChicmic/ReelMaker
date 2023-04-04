@@ -100,11 +100,16 @@ export class ReelSpin extends Component {
         const dirModifier = -1;
         const move = tween().by(this.spinSpeed, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
         const doChange = tween().call(() => {
+           
+
             this.changeCallback(element)
 
         });
+
         const repeat = tween(element).repeat(times, move.then(doChange));
-        const checkEnd = tween().call(() => this.checkEndCallback(element));
+        const checkEnd = tween().call(() => {this.checkEndCallback(element)
+          
+        });
         repeat.then(checkEnd).start();
 
 

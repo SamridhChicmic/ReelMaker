@@ -17,9 +17,10 @@ export class Machine extends Component {
   public numberOfReels = 5;
   Reel: Prefab = null;
   reelScriptName = null;
+  setTOut = 0;
   start() {
-    this.createMachine("ReelSpin");
-    this.scheduleOnce(this.spin, 1);
+    this.createMachine("ReelDrop");
+
     this.scheduleOnce(this.stop, 4);
   }
 
@@ -34,11 +35,14 @@ export class Machine extends Component {
       case ANIMATION_TYPES.REELSPIN:
         this.Reel = this.ReelSpin;
         this.reelScriptName = ANIMATION_TYPES.REELSPIN;
+        this.scheduleOnce(this.spin, 1);
         break;
 
       case ANIMATION_TYPES.REELDROP:
         this.Reel = this.ReelDrop;
         this.reelScriptName = ANIMATION_TYPES.REELDROP;
+        this.setTOut = 1;
+        this.scheduleOnce(this.drop, 1);
         break;
 
       default:
@@ -68,14 +72,26 @@ export class Machine extends Component {
   }
 
 
-  spin(): void {
+  drop(): void {
 
     // this.spinning = true;
+    for (let i = 0; i < this.numberOfReels; i += 1) {
+      this.scheduleOnce(() => {
+        const theReel: any = this.reels[i].getComponent(this.reelScriptName);
+        theReel.doSpin(i);
+      }, ((i + 1) * 0.1) * this.setTOut);
+
+    }
+
+  }
+
+  spin() {
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const theReel: any = this.reels[i].getComponent(this.reelScriptName);
       theReel.doSpin(0.03);
     }
   }
+
 
   update(deltaTime: number) { }
 }
