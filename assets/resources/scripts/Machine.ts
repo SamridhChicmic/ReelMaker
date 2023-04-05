@@ -19,7 +19,7 @@ export class Machine extends Component {
   reelScriptName = null;
   setTOut = 0;
   start() {
-    this.createMachine("ReelDrop");
+    this.createMachine("ReelSpin");
 
     this.scheduleOnce(this.stop, 4);
   }

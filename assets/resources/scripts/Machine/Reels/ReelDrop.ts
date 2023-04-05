@@ -145,9 +145,10 @@ export class ReelDrop extends Component {
             let element = this.reelAnchor.children[i];
             let direction = -1;
             const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
-            const doChange = tween().call(() => { this.stopDrop(element, i); });
+            const doChange = tween().call(() => { /*this.stopDrop(element, i);*/ });
             // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
-            const start = tween(element).by(0.8, { position: new Vec3(0, (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction, 0) }); //time = 0.8
+            let position = ((this.node.getComponent(UITransform).height + element.getComponent(UITransform).height) * 0.5 * direction) + element.getComponent(UITransform).height * (((this.reelAnchor.children.length - 2) - i));
+            const start = tween(element).to(0.6, { position: new Vec3(0, position, 0) }); //time = 0.8 (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction
             delay.then(start).then(doChange).start(); //then(doChange)
         }
     }

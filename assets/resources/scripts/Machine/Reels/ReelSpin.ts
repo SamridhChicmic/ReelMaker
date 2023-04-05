@@ -1,4 +1,5 @@
-import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, tween, UI, UITransform, Vec3 } from 'cc';
+import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, randomRangeInt, tween, UI, UITransform, Vec3 } from 'cc';
+import { Tile } from '../Tile';
 
 const { ccclass, property } = _decorator;
 
@@ -10,7 +11,7 @@ export class ReelSpin extends Component {
     @property({ type: Node })
     public reelAnchor = null;
 
-    public spinSpeed = 0.05;
+    public spinSpeed = 0.09;
     public stopSpinning = false;
     private tiles = [];
 
@@ -20,11 +21,16 @@ export class ReelSpin extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 6;
+    noOfTiles = 7;
+    resultShow = false;
+
+
     protected onLoad(): void {
         this.tile = instantiate(this.tilePrefab);
     }
 
+
+    //----------------------------------------------------------createReel()--------------------------------------------------------------------
 
     /**
      * 
@@ -32,11 +38,8 @@ export class ReelSpin extends Component {
      * @description this function is used to create reel using tiles 
      */
     createReel(reelNum: number): void {
-        // let this.newTile: Node;
         this.reelNumber = reelNum;
-
         this.node.getComponent(UITransform).height = ((this.noOfTiles - 2) * this.tile.getComponent(UITransform).height);
-
         for (let i = 0; i < this.noOfTiles; i++) {
             this.newTile = instantiate(this.tilePrefab);
             if (this.newTile) {
@@ -45,17 +48,15 @@ export class ReelSpin extends Component {
             }
             this.reelAnchor.addChild(this.newTile);
             this.reelAnchor.getComponent(Layout).updateLayout();
-            // this.reelAnchor.height = 1125;
             this.maskedHeight = (this.reelAnchor.getComponent(UITransform).height - this.node.getComponent(UITransform).height);
-
-
-
             this.tiles[i] = this.newTile;
-
         }
-
     }
 
+
+    //-------------------------------------------------------------changeCallback()----------------------------------------------------------------
+
+    resultArray = [1, 2, 3];
     /**
      * 
      * @param element 
@@ -63,10 +64,6 @@ export class ReelSpin extends Component {
      */
     changeCallback(element: Node = null): void {
         const dirModifier = -1;
-        // console.log("element.position.y", element.position.y);
-        // console.log("this.maskedHeight", this.maskedHeight);
-
-
         let check = 0;
         if (this.noOfTiles > 5) {
             check = (element.getComponent(UITransform).height);
@@ -75,11 +72,31 @@ export class ReelSpin extends Component {
         if (this.noOfTiles < 5) {
             visibleTalesManager = -1;
         }
-
         if (element.position.y > this.maskedHeight + check) {
+            let tileScript = element.getComponent(Tile);
+            let num = 0;
+            if (this.resultShow == true && this.resultArray.length > 0) {
+
+
+                // console.log("TILE SPRITE :- ", this.resultArray.pop());
+                num = this.resultArray.pop();
+
+
+            }
+            tileScript.setTile(num);
+
+
+
+
             element.position = new Vec3(0, (this.maskedHeight * dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
         }
     }
+
+
+
+    //-----------------------------------------------------------checkEndCallback()-------------------------------------------------------------------
+
+
 
     /**
      * 
@@ -96,24 +113,30 @@ export class ReelSpin extends Component {
     }
 
 
+    //------------------------------------------------------------------doSpinning()--------------------------------------------------------------------
+
+
+
+
     doSpinning(element: Node = null, times = 1): void {
         const dirModifier = -1;
         const move = tween().by(this.spinSpeed, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
         const doChange = tween().call(() => {
-           
-
             this.changeCallback(element)
-
         });
 
         const repeat = tween(element).repeat(times, move.then(doChange));
-        const checkEnd = tween().call(() => {this.checkEndCallback(element)
-          
+        const checkEnd = tween().call(() => {
+            this.checkEndCallback(element)
         });
         repeat.then(checkEnd).start();
-
-
     }
+
+
+
+    //------------------------------------------------------------doSpin()--------------------------------------------------------------------
+
+
 
     /**
      * 
@@ -122,8 +145,6 @@ export class ReelSpin extends Component {
      */
     doSpin(windUp): void {
         this.reelAnchor.children.forEach((element) => {
-            //    console.log("For Each Element", element);
-
             const dirModifier = -1;
             const delay = tween(element).delay(windUp);
             const start = tween(element).by(
@@ -132,29 +153,53 @@ export class ReelSpin extends Component {
                 { easing: "backIn" }
             );
             const doChange = tween().call(() => this.changeCallback(element));
-            const callSpinning = tween(element).call(() => this.doSpinning(element, 50));
+            const callSpinning = tween(element).call(() => this.doSpinning(element, 5));
             delay.then(start).then(doChange).then(callSpinning).start();
         });
     }
 
-    readyStop() { this.stopSpinning = true; }
+
+    //--------------------------------------------------------------readyStop()--------------------------------------------------------------------
+
+
+    readyStop() {
+        this.stopSpinning = true;
+        // this.resultShow = true;
+    }
+
+
+    //-----------------------------------------------------------doStop()-------------------------------------------------------------------
+
 
     doStop(element) {
         let dirModifier = -1;
+        const move = tween(element).by(0.05, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
+        const doChange = tween().call(() => {
+            this.changeCallback(element)
 
-        tween(element).by(
+        });
+        let end = tween().by(
             0.25,
             { position: new Vec3(0, ((this.maskedHeight * 0.5) * dirModifier), 0) },
             { easing: "bounceOut" }
-        ).start();
-
+        )
+        let result = tween().call(() => {
+            this.resultShow = true;
+        })
+        move.then(result).then(doChange).then(move).then(doChange).start();
 
 
     }
+
+    //-------------------------------------------------------------start()-------------------------------------------------------------------
+
     protected start(): void {
         console.log("Working from ReelSpin");
 
     }
+
+    //--------------------------------------------------------------update()--------------------------------------------------------------------
+
     update(deltaTime: number) {
 
     }
