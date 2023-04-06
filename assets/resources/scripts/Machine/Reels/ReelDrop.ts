@@ -1,4 +1,5 @@
 import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, tween, UI, UITransform, Vec3 } from 'cc';
+import { Tile } from '../Tile';
 
 const { ccclass, property } = _decorator;
 
@@ -20,11 +21,20 @@ export class ReelDrop extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 4;
+    noOfTiles = 3;
+
+
+    //----------------------------------------------------------onLoad()--------------------------------------------------------------------
+
+
     protected onLoad(): void {
         this.tile = instantiate(this.tilePrefab);
     }
 
+
+
+
+    //----------------------------------------------------------createReel()--------------------------------------------------------------------
 
     /**
      * 
@@ -56,6 +66,11 @@ export class ReelDrop extends Component {
 
     }
 
+
+    //----------------------------------------------------------changeCallback()--------------------------------------------------------------------
+
+    resultArray = [7, 8, 9, 10, 11]
+
     /**
      * 
      * @param element 
@@ -74,52 +89,24 @@ export class ReelDrop extends Component {
             visibleTalesManager = -1;
         }
         // let element = this.reelAnchor.children[0];
-        if (eelement.position.y * dirModifier > this.maskedHeight) {
+        if (eelement.position.y * dirModifier > this.maskedHeight - eelement.getComponent(UITransform).height * 2) {
             console.log(eelement.getChildByName("tileNum").getComponent(Label).string)
-            eelement.position = new Vec3(0, (this.maskedHeight) + ((eelement.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
+            let tileScript = eelement.getComponent(Tile);
+            let num = 0;
+            if (this.resultArray.length > 0) {
+
+
+                // console.log("TILE SPRITE :- ", this.resultArray.pop());
+                num = this.resultArray.pop();//randomRangeInt(1, this.noOfTiles + 1
+
+
+            }
+            tileScript.setTile(num);
+            eelement.position = new Vec3(0, (1000), 0); //+ ((eelement.getComponent(UITransform).height * (visibleTalesManager)) * 0.5)
         }
     }
 
-    /**
-     * 
-     * @param element 
-     * @description used to check when to stop the spin of a particular Reel
-     */
-    // checkEndCallback(element: Node = null): void {
 
-    //     if (this.stopSpinning) {
-    //         this.doStop(element);
-    //     } else {
-
-
-    //         this.doSpinning(element);
-    //     }
-    // }
-
-
-    // doSpinning(element: Node = null, times = 1): void {
-
-    //     const dirModifier = -1;
-    //     const move = tween().by(0.8, { position: new Vec3(0, (this.maskedHeight * 2) * dirModifier, 0) }); //time=0.8
-    //     const doChange = tween().call(() => {
-
-    //         this.changeCallback(element)
-
-
-    //     });
-    //     const repeat = tween(element).repeat(times, move.then(doChange));
-    //     const checkEnd = tween().call(() => {
-
-    //         this.checkEndCallback(element);
-
-    //     });
-    //     // const checkEnd = tween().call(() => this.checkEndCallback(element));
-    //     repeat.then(checkEnd).start();
-
-
-
-
-    // }
 
     /**
      * 
@@ -131,13 +118,19 @@ export class ReelDrop extends Component {
             let element = this.reelAnchor.children[i];
             let direction = -1;
             const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
-            const doChange = tween().call(() => { this.changeCallback(element); this.spinAgain() });
+            const doChange = tween().call(() => { this.changeCallback(element); this.scheduleOnce(() => { this.spinAgain() }, 1.5) });
             // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
-            const start = tween(element).by(0.8, { position: new Vec3(0, (this.maskedHeight * 2) * direction, 0) }); //time = 0.8
+            const start = tween(element).by(0.3, { position: new Vec3(0, (this.maskedHeight * 2) * direction, 0) }); //time = 0.8
             delay.then(start).then(doChange).start(); //then(doChange)
         }
 
     }
+
+
+    //----------------------------------------------------------spinAgain()--------------------------------------------------------------------
+
+
+
     spinAgain() {
         console.log("spinAgain called");
 
@@ -147,11 +140,14 @@ export class ReelDrop extends Component {
             const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
             const doChange = tween().call(() => { /*this.stopDrop(element, i);*/ });
             // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
-            let position = ((this.node.getComponent(UITransform).height + element.getComponent(UITransform).height) * 0.5 * direction) + element.getComponent(UITransform).height * (((this.reelAnchor.children.length - 2) - i));
-            const start = tween(element).to(0.6, { position: new Vec3(0, position, 0) }); //time = 0.8 (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction
+            let position = (((this.node.getComponent(UITransform).height) + element.getComponent(UITransform).height) * 0.5 * direction) + element.getComponent(UITransform).height * (((this.reelAnchor.children.length - 1) - i));
+            const start = tween(element).to(0.2, { position: new Vec3(0, position, 0) }); //time = 0.8 (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction
             delay.then(start).then(doChange).start(); //then(doChange)
         }
     }
+
+
+    //----------------------------------------------------------stopDrop()--------------------------------------------------------------------
 
     stopDrop(element, i) {
         let dirModifier = -1;
@@ -165,9 +161,15 @@ export class ReelDrop extends Component {
         }
     }
 
+
+    //----------------------------------------------------------readyStop()--------------------------------------------------------------------
+
+
+
     readyStop() {
 
         this.stopSpinning = true;
+
     }
     count = 0;
     doStop(element) {
@@ -181,9 +183,6 @@ export class ReelDrop extends Component {
             { easing: "bounceOut" }
         ).start();
 
-
-
-
     }
 
     update(deltaTime: number) {
@@ -191,7 +190,7 @@ export class ReelDrop extends Component {
     }
 
     protected start(): void {
-        console.log("Working from ReelDrop");
+
 
     }
 }

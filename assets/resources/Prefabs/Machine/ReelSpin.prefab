@@ -231,7 +231,7 @@
     "node": {
       "__id__": 1
     },
-    "_enabled": false,
+    "_enabled": true,
     "__prefab": {
       "__id__": 11
     },
@@ -252,7 +252,7 @@
     "node": {
       "__id__": 1
     },
-    "_enabled": false,
+    "_enabled": true,
     "__prefab": {
       "__id__": 13
     },

@@ -14,14 +14,20 @@ export class Machine extends Component {
 
   private reels: Node[] = [];
   newReel: Node;
+
   public numberOfReels = 5;
   Reel: Prefab = null;
   reelScriptName = null;
   setTOut = 0;
-  start() {
-    this.createMachine("ReelSpin");
 
-    this.scheduleOnce(this.stop, 4);
+
+
+  start() {
+    this.createMachine("ReelDrop");
+    this.scheduleOnce(() => {
+      this.stop();
+    }, 8)
+    // this.scheduleOnce(this.stop, 6);
   }
 
   /**
@@ -85,7 +91,10 @@ export class Machine extends Component {
 
   }
 
+
   spin() {
+
+
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const theReel: any = this.reels[i].getComponent(this.reelScriptName);
       theReel.doSpin(0.03);
