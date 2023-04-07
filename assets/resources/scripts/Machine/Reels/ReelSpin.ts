@@ -21,7 +21,7 @@ export class ReelSpin extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 4;
+    noOfTiles = 5;
     resultShow = false;
 
 
@@ -56,7 +56,7 @@ export class ReelSpin extends Component {
 
     //-------------------------------------------------------------changeCallback()----------------------------------------------------------------
 
-    resultArray = [1, 2];
+    resultArray = [1, 2, 3];
     /**
      * 
      * @param element 

@@ -23,7 +23,7 @@ export class Machine extends Component {
 
 
   start() {
-    this.createMachine("ReelDrop");
+    this.createMachine("ReelSpin");
     this.scheduleOnce(() => {
       this.stop();
     }, 8)

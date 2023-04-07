@@ -11,6 +11,9 @@ export class ReelDrop extends Component {
     @property({ type: Node })
     public reelAnchor = null;
 
+    @property({ type: Node })
+    ReelMask = null;
+
     public spinSpeed = 0.05;
     public stopSpinning = false;
     private tiles = [];
@@ -21,7 +24,7 @@ export class ReelDrop extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 3;
+    noOfTiles = 4;
 
 
     //----------------------------------------------------------onLoad()--------------------------------------------------------------------
@@ -56,6 +59,7 @@ export class ReelDrop extends Component {
             this.reelAnchor.addChild(this.newTile);
             this.reelAnchor.getComponent(Layout).updateLayout();
             // this.reelAnchor.height = 1125;
+            this.ReelMask.getComponent(UITransform).height = this.reelAnchor.getComponent(UITransform).height;
             this.maskedHeight = (this.reelAnchor.getComponent(UITransform).height - this.node.getComponent(UITransform).height);
 
 
