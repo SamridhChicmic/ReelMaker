@@ -1,6 +1,7 @@
-import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform } from "cc";
+import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform, log } from "cc";
 import { ReelSpin } from "./Machine/Reels/ReelSpin";
 import { ANIMATION_TYPES } from "./AnimationTypes";
+import { HUD } from "./HUD/HUD";
 const { ccclass, property } = _decorator;
 
 @ccclass("Machine")
@@ -15,20 +16,21 @@ export class Machine extends Component {
   private reels: Node[] = [];
   newReel: Node;
 
-  public numberOfReels = 7;
+
+  public numberOfReels = 5;
   Reel: Prefab = null;
   reelScriptName = null;
   setTOut = 0;
-  tileSize = { Height: 250, Width: 250 }
+  tileSize = { Height: 250, Width: 350 }
 
+  hudScript = null;
+  protected onLoad(): void {
+
+  }
 
   start() {
 
     this.createMachine("ReelSpin", this.tileSize);
-    this.scheduleOnce(() => {
-      this.stop();
-    }, 8)
-    // this.scheduleOnce(this.stop, 6);
   }
 
   /**
@@ -42,7 +44,7 @@ export class Machine extends Component {
       case ANIMATION_TYPES.REELSPIN:
         this.Reel = this.ReelSpin;
         this.reelScriptName = ANIMATION_TYPES.REELSPIN;
-        this.scheduleOnce(this.spin, 1);
+        // this.scheduleOnce(this.spin, 1);
         break;
 
       case ANIMATION_TYPES.REELDROP:
@@ -65,10 +67,12 @@ export class Machine extends Component {
     }
   }
 
-
+  hudScriptCatcher(hudScript) {
+    this.hudScript = hudScript;
+  }
 
   stop() {
-
+    this.hudScript.spinButtonInteraction(true);
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const spinDelay = i * 1.2;
       const theReel: any = this.reels[i].getComponent(this.reelScriptName);
@@ -94,7 +98,9 @@ export class Machine extends Component {
 
 
   spin() {
-
+    this.scheduleOnce(() => {
+      this.stop();
+    }, 8)
 
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const theReel: any = this.reels[i].getComponent(this.reelScriptName);

@@ -83,6 +83,8 @@ export class ReelSpin extends Component {
             let tileScript = element.getComponent(Tile);
             let num = 0;
             if (this.resultShow == true && this.resultArray.length > 0) {
+                console.log("resulArray REfilled");
+
                 num = this.resultArray.pop();//randomRangeInt(1, this.noOfTiles + 1
             }
             tileScript.setTile(num);
@@ -172,6 +174,7 @@ export class ReelSpin extends Component {
 
 
     doStop(element) {
+
         this.dirModifier = -1;
         const move = tween(element).by(0.05, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
         const lastMove = tween().by(0.05, { position: new Vec3(0, element.getComponent(UITransform).height, 0) });
@@ -183,7 +186,7 @@ export class ReelSpin extends Component {
             0.25,
             { position: new Vec3(0, ((this.maskedHeight * 0.5) * this.dirModifier) + element.getComponent(UITransform).height, 0) },
             { easing: "bounceOut" }
-        )
+        ).call(() => { this.stopSpinning = false; this.resultShow = false; this.resultArray = [1, 2, 3] })
         let result = tween(element).call(() => {
             this.resultShow = true;
 

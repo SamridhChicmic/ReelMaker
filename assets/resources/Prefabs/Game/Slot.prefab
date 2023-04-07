@@ -404,6 +404,13 @@
     "__prefab": {
       "__id__": 19
     },
+    "HUD": {
+      "__uuid__": "cd478499-4cca-4e78-ae23-6f0bb808a379",
+      "__expectedType__": "cc.Prefab"
+    },
+    "Machine": {
+      "__id__": 10
+    },
     "_id": ""
   },
   {

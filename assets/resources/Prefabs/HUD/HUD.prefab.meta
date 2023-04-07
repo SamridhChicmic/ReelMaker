@@ -2,12 +2,12 @@
   "ver": "1.1.43",
   "importer": "prefab",
   "imported": true,
-  "uuid": "01d6dfa9-6a23-4320-afe1-8cfa8454d12e",
+  "uuid": "cd478499-4cca-4e78-ae23-6f0bb808a379",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Spin"
+    "syncNodeName": "HUD"
   }
 }
