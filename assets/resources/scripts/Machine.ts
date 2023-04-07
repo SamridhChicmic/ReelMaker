@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite } from "cc";
+import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform } from "cc";
 import { ReelSpin } from "./Machine/Reels/ReelSpin";
 import { ANIMATION_TYPES } from "./AnimationTypes";
 const { ccclass, property } = _decorator;
@@ -15,15 +15,16 @@ export class Machine extends Component {
   private reels: Node[] = [];
   newReel: Node;
 
-  public numberOfReels = 5;
+  public numberOfReels = 7;
   Reel: Prefab = null;
   reelScriptName = null;
   setTOut = 0;
-
+  tileSize = { Height: 250, Width: 250 }
 
 
   start() {
-    this.createMachine("ReelSpin");
+
+    this.createMachine("ReelSpin", this.tileSize);
     this.scheduleOnce(() => {
       this.stop();
     }, 8)
@@ -33,9 +34,9 @@ export class Machine extends Component {
   /**
    * @description this function is used to createMachine by adding reels in Machine
    */
-  createMachine(AnimationType) {
+  createMachine(AnimationType, tileSize) {
     this.reels = [];
-
+    this.node.getComponent(UITransform).width = this.numberOfReels * this.tileSize.Width;
     //Deciding which animation will play
     switch (AnimationType) {
       case ANIMATION_TYPES.REELSPIN:
@@ -59,7 +60,7 @@ export class Machine extends Component {
       this.node.addChild(this.newReel);
       this.reels[i] = this.newReel;
       const reelScript: any = this.newReel.getComponent(this.reelScriptName);
-      reelScript.createReel(i);
+      reelScript.createReel(i, this.tileSize);
       // reelScript.shuffle();
     }
   }

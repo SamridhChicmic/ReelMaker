@@ -388,8 +388,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1960,
-      "height": 250
+      "width": 600,
+      "height": 400
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -470,7 +470,7 @@
     "node": {
       "__id__": 1
     },
-    "_enabled": true,
+    "_enabled": false,
     "__prefab": {
       "__id__": 23
     },

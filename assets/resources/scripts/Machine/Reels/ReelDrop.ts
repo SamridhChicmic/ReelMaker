@@ -82,8 +82,6 @@ export class ReelDrop extends Component {
      */
     changeCallback(eelement: Node = null): void {
         const dirModifier = -1;
-        // console.log("element.position.y", element.position.y);
-        // console.log("this.maskedHeight", this.maskedHeight);
         let check = 0;
         if (this.noOfTiles > 5) {
             check = (eelement.getComponent(UITransform).height);
@@ -106,7 +104,7 @@ export class ReelDrop extends Component {
 
             }
             tileScript.setTile(num);
-            eelement.position = new Vec3(0, (1000), 0); //+ ((eelement.getComponent(UITransform).height * (visibleTalesManager)) * 0.5)
+            eelement.position = new Vec3(0, (this.ReelMask.getComponent(UITransform).height), 0); //+ ((eelement.getComponent(UITransform).height * (visibleTalesManager)) * 0.5)
         }
     }
 
@@ -123,7 +121,6 @@ export class ReelDrop extends Component {
             let direction = -1;
             const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
             const doChange = tween().call(() => { this.changeCallback(element); this.scheduleOnce(() => { this.spinAgain() }, 1.5) });
-            // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
             const start = tween(element).by(0.3, { position: new Vec3(0, (this.maskedHeight * 2) * direction, 0) }); //time = 0.8
             delay.then(start).then(doChange).start(); //then(doChange)
         }
@@ -142,28 +139,21 @@ export class ReelDrop extends Component {
             let element = this.reelAnchor.children[i];
             let direction = -1;
             const delay = tween(element).delay(((this.reelAnchor.children.length + 1) - i) * 0.2);
-            const doChange = tween().call(() => { /*this.stopDrop(element, i);*/ });
-            // const callSpinning = tween(element).call(() => this.doSpinning(element, 1));
             let position = (((this.node.getComponent(UITransform).height) + element.getComponent(UITransform).height) * 0.5 * direction) + element.getComponent(UITransform).height * (((this.reelAnchor.children.length - 1) - i));
             const start = tween(element).to(0.2, { position: new Vec3(0, position, 0) }); //time = 0.8 (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction
-            delay.then(start).then(doChange).start(); //then(doChange)
+            delay.then(start).start(); //then(doChange)
         }
     }
 
 
     //----------------------------------------------------------stopDrop()--------------------------------------------------------------------
 
-    stopDrop(element, i) {
-        let dirModifier = -1;
-        console.log("element.position.y * dirModifier", element.position.y * dirModifier);
-
-        console.log("----", this.maskedHeight - (element.getComponent(UITransform).height * (i)));
-
-        if (element.position.y > this.maskedHeight) { // - (element.getComponent(UITransform).height * (i + 1))
-
-            tween(element).stop()
-        }
-    }
+    // stopDrop(element, i) {
+    //     let dirModifier = -1;
+    //     if (element.position.y > this.maskedHeight) { // - (element.getComponent(UITransform).height * (i + 1)
+    //         tween(element).stop()
+    //     }
+    // }
 
 
     //----------------------------------------------------------readyStop()--------------------------------------------------------------------
@@ -171,31 +161,17 @@ export class ReelDrop extends Component {
 
 
     readyStop() {
-
         this.stopSpinning = true;
-
     }
     count = 0;
     doStop(element) {
         let dirModifier = -1;
         this.count++;
-        console.log("wor5king");
-
         tween(element).by(
             10,
             { position: new Vec3(0, (((this.maskedHeight * 0.5) * dirModifier) * element.getComponent(UITransform).height * this.count), 0) },
             { easing: "bounceOut" }
         ).start();
-
-    }
-
-    update(deltaTime: number) {
-
-    }
-
-    protected start(): void {
-
-
     }
 }
 

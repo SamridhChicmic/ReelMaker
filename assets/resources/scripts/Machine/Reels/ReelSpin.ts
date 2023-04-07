@@ -23,10 +23,11 @@ export class ReelSpin extends Component {
     tileAdjustor = 0;
     noOfTiles = 5;
     resultShow = false;
+    dirModifier = 1;
 
 
     protected onLoad(): void {
-        this.tile = instantiate(this.tilePrefab);
+
     }
 
 
@@ -37,11 +38,17 @@ export class ReelSpin extends Component {
      * @param reelNum 
      * @description this function is used to create reel using tiles 
      */
-    createReel(reelNum: number): void {
+    createReel(reelNum: number, tileSize): void {
+        this.tile = instantiate(this.tilePrefab);
+        this.tile.getComponent(UITransform).height = tileSize.Height;
+        this.tile.getComponent(UITransform).width = tileSize.Width;
         this.reelNumber = reelNum;
+
         this.node.getComponent(UITransform).height = ((this.noOfTiles - 2) * this.tile.getComponent(UITransform).height);
         for (let i = 0; i < this.noOfTiles; i++) {
             this.newTile = instantiate(this.tilePrefab);
+            this.newTile.getComponent(UITransform).height = tileSize.Height;
+            this.newTile.getComponent(UITransform).width = tileSize.Width;
             if (this.newTile) {
                 this.newTile.getChildByName("tileNum").getComponent(Label).string = (i + 1).toString();
                 this.newTile.name = i.toString();
@@ -63,7 +70,7 @@ export class ReelSpin extends Component {
      * @description this function is used to Reposition the tiles 
      */
     changeCallback(element: Node = null): void {
-        const dirModifier = -1;
+        this.dirModifier = -1;
         let check = 0;
         if (this.noOfTiles > 5) {
             check = (element.getComponent(UITransform).height);
@@ -76,20 +83,10 @@ export class ReelSpin extends Component {
             let tileScript = element.getComponent(Tile);
             let num = 0;
             if (this.resultShow == true && this.resultArray.length > 0) {
-
-
-                // console.log("TILE SPRITE :- ", this.resultArray.pop());
                 num = this.resultArray.pop();//randomRangeInt(1, this.noOfTiles + 1
-
-
             }
             tileScript.setTile(num);
-
-
-
-
-
-            element.position = new Vec3(0, (this.maskedHeight * dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
+            element.position = new Vec3(0, (this.maskedHeight * this.dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
         }
     }
 
@@ -107,9 +104,7 @@ export class ReelSpin extends Component {
     checkEndCallback(element: Node = null): void {
 
         if (this.stopSpinning) {
-
             this.doStop(element);
-
         } else {
             this.doSpinning(element);
         }
@@ -122,8 +117,8 @@ export class ReelSpin extends Component {
 
 
     doSpinning(element: Node = null, times = 1): void {
-        const dirModifier = -1;
-        const move = tween().by(this.spinSpeed, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
+        this.dirModifier = 1
+        const move = tween().by(this.spinSpeed, { position: new Vec3(0, (this.maskedHeight * 0.5) * this.dirModifier, 0) });
         const doChange = tween().call(() => {
             this.changeCallback(element)
         });
@@ -147,13 +142,13 @@ export class ReelSpin extends Component {
      * @description used to spin the tiles using tween
      */
     doSpin(windUp): void {
-
+        this.dirModifier = 1
         this.reelAnchor.children.forEach((element) => {
-            const dirModifier = -1;
+
             const delay = tween(element).delay(windUp);
             const start = tween(element).by(
                 0.5,
-                { position: new Vec3(0, (this.maskedHeight * 0.5), 0) },
+                { position: new Vec3(0, (this.maskedHeight * 0.5) * this.dirModifier, 0) },
                 { easing: "backIn" }
             );
             const doChange = tween().call(() => this.changeCallback(element));
@@ -177,7 +172,7 @@ export class ReelSpin extends Component {
 
 
     doStop(element) {
-        let dirModifier = -1;
+        this.dirModifier = -1;
         const move = tween(element).by(0.05, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });
         const lastMove = tween().by(0.05, { position: new Vec3(0, element.getComponent(UITransform).height, 0) });
         const doChange = tween().call(() => {
@@ -186,7 +181,7 @@ export class ReelSpin extends Component {
         });
         let end = tween().by(
             0.25,
-            { position: new Vec3(0, ((this.maskedHeight * 0.5) * dirModifier) + element.getComponent(UITransform).height, 0) },
+            { position: new Vec3(0, ((this.maskedHeight * 0.5) * this.dirModifier) + element.getComponent(UITransform).height, 0) },
             { easing: "bounceOut" }
         )
         let result = tween(element).call(() => {
@@ -215,19 +210,6 @@ export class ReelSpin extends Component {
 
 
         }
-
-    }
-
-    //-------------------------------------------------------------start()-------------------------------------------------------------------
-
-    protected start(): void {
-        console.log("Working from ReelSpin");
-
-    }
-
-    //--------------------------------------------------------------update()--------------------------------------------------------------------
-
-    update(deltaTime: number) {
 
     }
 }
