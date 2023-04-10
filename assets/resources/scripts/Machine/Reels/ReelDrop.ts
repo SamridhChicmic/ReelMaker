@@ -31,7 +31,7 @@ export class ReelDrop extends Component {
 
 
     protected onLoad(): void {
-        this.tile = instantiate(this.tilePrefab);
+
     }
 
 
@@ -44,14 +44,19 @@ export class ReelDrop extends Component {
      * @param reelNum 
      * @description this function is used to create reel using tiles 
      */
-    createReel(reelNum: number): void {
+    createReel(reelNum: number, tileSize): void {
         // let this.newTile: Node;
+        this.tile = instantiate(this.tilePrefab);
+        this.tile.getComponent(UITransform).height = tileSize.Height;
+        this.tile.getComponent(UITransform).width = tileSize.Width;
         this.reelNumber = reelNum;
 
         this.node.getComponent(UITransform).height = ((this.noOfTiles - 2) * this.tile.getComponent(UITransform).height);
 
         for (let i = 0; i < this.noOfTiles; i++) {
             this.newTile = instantiate(this.tilePrefab);
+            this.newTile.getComponent(UITransform).height = tileSize.Height;
+            this.newTile.getComponent(UITransform).width = tileSize.Width;
             if (this.newTile) {
                 this.newTile.getChildByName("tileNum").getComponent(Label).string = (i + 1).toString();
                 this.newTile.name = i.toString();
@@ -103,7 +108,7 @@ export class ReelDrop extends Component {
 
 
             }
-            tileScript.setTile(num);
+            // tileScript.setTile(num);
             eelement.position = new Vec3(0, (this.ReelMask.getComponent(UITransform).height), 0); //+ ((eelement.getComponent(UITransform).height * (visibleTalesManager)) * 0.5)
         }
     }

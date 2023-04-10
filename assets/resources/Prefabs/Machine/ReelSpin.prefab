@@ -343,6 +343,20 @@
     "reelAnchor": {
       "__id__": 2
     },
+    "tileSprites": [
+      {
+        "__uuid__": "e01be79d-ca85-4613-9891-e05e17098a89@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "943c4312-9da7-4cf4-b055-3bfe3d561851@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "5989e7b5-0af1-4159-9a1b-1ff42d59db52@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      }
+    ],
     "_id": ""
   },
   {

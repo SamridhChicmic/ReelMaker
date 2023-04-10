@@ -1,7 +1,8 @@
-import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform, log } from "cc";
+import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform, log, ParticleUtils, Vec2, Vec3 } from "cc";
 import { ReelSpin } from "./Machine/Reels/ReelSpin";
 import { ANIMATION_TYPES } from "./AnimationTypes";
 import { HUD } from "./HUD/HUD";
+import { Payline } from "./Machine/Payline/Payline";
 const { ccclass, property } = _decorator;
 
 @ccclass("Machine")
@@ -16,21 +17,31 @@ export class Machine extends Component {
   private reels: Node[] = [];
   newReel: Node;
 
+  @property(Node) public paylineBg: Node = null;
 
-  public numberOfReels = 5;
+  public numberOfReels = 7;
   Reel: Prefab = null;
   reelScriptName = null;
   setTOut = 0;
-  tileSize = { Height: 250, Width: 350 }
-
+  tileSize = { Height: 200, Width: 200 }
   hudScript = null;
+  reelScript = null;
+
+  @property(Node)
+  machineBackground = null;
+
+  payLineScript = null;
   protected onLoad(): void {
 
   }
 
   start() {
+    this.payLineScript = this.paylineBg.getComponent(Payline);
+    this.createMachine("ReelDrop", this.tileSize);
 
-    this.createMachine("ReelSpin", this.tileSize);
+
+
+
   }
 
   /**
@@ -39,6 +50,9 @@ export class Machine extends Component {
   createMachine(AnimationType, tileSize) {
     this.reels = [];
     this.node.getComponent(UITransform).width = this.numberOfReels * this.tileSize.Width;
+
+    this.machineBackground.getComponent(UITransform).width = this.node.getComponent(UITransform).width;
+    // this.paylineBg.getComponent(UITransform).width = this.node.getComponent(UITransform).width
     //Deciding which animation will play
     switch (AnimationType) {
       case ANIMATION_TYPES.REELSPIN:
@@ -51,7 +65,8 @@ export class Machine extends Component {
         this.Reel = this.ReelDrop;
         this.reelScriptName = ANIMATION_TYPES.REELDROP;
         this.setTOut = 1;
-        this.scheduleOnce(this.drop, 1);
+        // this.scheduleOnce(this.drop, 1);
+
         break;
 
       default:
@@ -61,8 +76,8 @@ export class Machine extends Component {
       this.newReel = instantiate(this.Reel);
       this.node.addChild(this.newReel);
       this.reels[i] = this.newReel;
-      const reelScript: any = this.newReel.getComponent(this.reelScriptName);
-      reelScript.createReel(i, this.tileSize);
+      this.reelScript = this.newReel.getComponent(this.reelScriptName);
+      this.node.getComponent(UITransform).height = this.reelScript.createReel(i, this.tileSize);
       // reelScript.shuffle();
     }
   }
@@ -72,6 +87,16 @@ export class Machine extends Component {
   }
 
   stop() {
+   
+    if (this.ReelSpin.name == ANIMATION_TYPES.REELSPIN) {
+      let size = this.node.getComponent(UITransform).contentSize;
+      this.payLineScript.initTilePos(this.numberOfReels, this.reelScript.noOfTiles, size);
+
+      this.scheduleOnce(() => {
+        this.payLineScript.createLine();
+        this.payLineScript.setNodePosition(new Vec3(-1 * (this.node.getComponent(UITransform).width / 2), -1 * ((this.node.getComponent(UITransform).height / 2) + 45), 0))
+      }, this.numberOfReels + 1)
+    }
     this.hudScript.spinButtonInteraction(true);
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const spinDelay = i * 1.2;
@@ -100,7 +125,7 @@ export class Machine extends Component {
   spin() {
     this.scheduleOnce(() => {
       this.stop();
-    }, 8)
+    }, 5)
 
     for (let i = 0; i < this.numberOfReels; i += 1) {
       const theReel: any = this.reels[i].getComponent(this.reelScriptName);

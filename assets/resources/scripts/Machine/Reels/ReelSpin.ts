@@ -1,4 +1,4 @@
-import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, randomRangeInt, tween, UI, UITransform, Vec3 } from 'cc';
+import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, randomRangeInt, SpriteFrame, tween, UI, UITransform, Vec3 } from 'cc';
 import { Tile } from '../Tile';
 
 const { ccclass, property } = _decorator;
@@ -11,6 +11,9 @@ export class ReelSpin extends Component {
     @property({ type: Node })
     public reelAnchor = null;
 
+    @property({ type: SpriteFrame })
+    tileSprites: SpriteFrame[] = [];
+
     public spinSpeed = 0.05;
     public stopSpinning = false;
     private tiles = [];
@@ -21,12 +24,14 @@ export class ReelSpin extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 5;
+    noOfTiles = 6;
     resultShow = false;
     dirModifier = 1;
+    resultSprites = []
 
 
     protected onLoad(): void {
+        this.resultSprites = [...this.tileSprites];
 
     }
 
@@ -38,13 +43,15 @@ export class ReelSpin extends Component {
      * @param reelNum 
      * @description this function is used to create reel using tiles 
      */
-    createReel(reelNum: number, tileSize): void {
+    createReel(reelNum: number, tileSize): number {
         this.tile = instantiate(this.tilePrefab);
         this.tile.getComponent(UITransform).height = tileSize.Height;
         this.tile.getComponent(UITransform).width = tileSize.Width;
         this.reelNumber = reelNum;
 
         this.node.getComponent(UITransform).height = ((this.noOfTiles - 2) * this.tile.getComponent(UITransform).height);
+
+
         for (let i = 0; i < this.noOfTiles; i++) {
             this.newTile = instantiate(this.tilePrefab);
             this.newTile.getComponent(UITransform).height = tileSize.Height;
@@ -58,6 +65,8 @@ export class ReelSpin extends Component {
             this.maskedHeight = (this.reelAnchor.getComponent(UITransform).height - this.node.getComponent(UITransform).height);
             this.tiles[i] = this.newTile;
         }
+
+        return this.node.getComponent(UITransform).height;
     }
 
 
@@ -81,11 +90,14 @@ export class ReelSpin extends Component {
         }
         if (element.position.y > this.maskedHeight + check) {
             let tileScript = element.getComponent(Tile);
-            let num = 0;
-            if (this.resultShow == true && this.resultArray.length > 0) {
-                console.log("resulArray REfilled");
+            // console.log(this.resultSprites);
 
-                num = this.resultArray.pop();//randomRangeInt(1, this.noOfTiles + 1
+            let num = this.resultSprites[0];
+            if (this.resultShow == true && this.resultSprites.length > 0) {
+                // console.log("resulArray REfilled");
+
+                num = this.resultSprites.pop();//randomRangeInt(1, this.noOfTiles + 1
+
             }
             tileScript.setTile(num);
             element.position = new Vec3(0, (this.maskedHeight * this.dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
@@ -186,7 +198,7 @@ export class ReelSpin extends Component {
             0.25,
             { position: new Vec3(0, ((this.maskedHeight * 0.5) * this.dirModifier) + element.getComponent(UITransform).height, 0) },
             { easing: "bounceOut" }
-        ).call(() => { this.stopSpinning = false; this.resultShow = false; this.resultArray = [1, 2, 3] })
+        ).call(() => { this.stopSpinning = false; this.resultShow = false; this.resultSprites = [...this.tileSprites]; })
         let result = tween(element).call(() => {
             this.resultShow = true;
 

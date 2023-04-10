@@ -1,6 +1,7 @@
 import { _decorator, Component, instantiate, Node, Prefab } from 'cc';
 import { HUD } from './HUD/HUD';
 import { Machine } from './Machine';
+import { ANIMATION_TYPES } from './AnimationTypes';
 const { ccclass, property } = _decorator;
 
 @ccclass('Slot')
@@ -22,8 +23,11 @@ export class Slot extends Component {
     }
 
     spin() {
-       let machineScript = this.Machine.getComponent(Machine);
-        machineScript.spin();
+        let machineScript = this.Machine.getComponent(Machine);
+        // if (machineScript.ReelSpin.name == ANIMATION_TYPES.REELSPIN) { machineScript.spin(); }
+        // else {
+        machineScript.drop();
+        // }
         machineScript.hudScriptCatcher(this.hudScript);
     }
 
