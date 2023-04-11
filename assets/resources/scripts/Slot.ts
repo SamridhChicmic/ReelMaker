@@ -26,7 +26,7 @@ export class Slot extends Component {
         let machineScript = this.Machine.getComponent(Machine);
         // if (machineScript.ReelSpin.name == ANIMATION_TYPES.REELSPIN) { machineScript.spin(); }
         // else {
-        machineScript.drop();
+        machineScript.spin();
         // }
         machineScript.hudScriptCatcher(this.hudScript);
     }

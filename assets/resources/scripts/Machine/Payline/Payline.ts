@@ -9,7 +9,7 @@ export class Payline extends Component {
     @property(Node)
     payLineBG: Node = null!;
 
-    payLineData = [0, 6];
+    payLineData = [0, 9, 5];
 
     paylineDimensions = null;
     start() {
@@ -40,8 +40,13 @@ export class Payline extends Component {
         graphicComponent.lineTo(endPoint, pos[1]);
         graphicComponent.moveTo(endPoint, pos[1]);
         graphicComponent.stroke();
+
     }
 
+    clearPaylines() {
+        let graphicComponent = this.node.getComponent(Graphics);
+        graphicComponent.clear();
+    }
     initTilePos(reelNo, tileNo, size) {
         this.node.getComponent(UITransform).contentSize = size;
         console.log("container size", size);
@@ -57,6 +62,18 @@ export class Payline extends Component {
 
         console.log(this.tilePos, "Tile position array");
 
+    }
+
+    isActive() {
+        return this.node.active;
+    }
+
+    inactivePayline() {
+        this.node.active = false;
+    }
+
+    activePayline() {
+        this.node.active = true;
     }
 
     update(deltaTime: number) {

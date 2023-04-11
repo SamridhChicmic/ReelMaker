@@ -44,7 +44,7 @@ export class ReelDrop extends Component {
      * @param reelNum 
      * @description this function is used to create reel using tiles 
      */
-    createReel(reelNum: number, tileSize): void {
+    createReel(reelNum: number, tileSize): number {
         // let this.newTile: Node;
         this.tile = instantiate(this.tilePrefab);
         this.tile.getComponent(UITransform).height = tileSize.Height;
@@ -72,6 +72,7 @@ export class ReelDrop extends Component {
             this.tiles[i] = this.newTile;
 
         }
+        return this.node.getComponent(UITransform).height;
 
     }
 

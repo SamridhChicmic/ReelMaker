@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform, log, ParticleUtils, Vec2, Vec3 } from "cc";
+import { _decorator, Component, Node, instantiate, JsonAsset, Prefab, Sprite, UITransform, log, ParticleUtils, Vec2, Vec3, Graphics } from "cc";
 import { ReelSpin } from "./Machine/Reels/ReelSpin";
 import { ANIMATION_TYPES } from "./AnimationTypes";
 import { HUD } from "./HUD/HUD";
@@ -37,7 +37,7 @@ export class Machine extends Component {
 
   start() {
     this.payLineScript = this.paylineBg.getComponent(Payline);
-    this.createMachine("ReelDrop", this.tileSize);
+    this.createMachine("ReelSpin", this.tileSize);
 
 
 
@@ -86,30 +86,42 @@ export class Machine extends Component {
     this.hudScript = hudScript;
   }
 
-  stop() {
-   
-    if (this.ReelSpin.name == ANIMATION_TYPES.REELSPIN) {
-      let size = this.node.getComponent(UITransform).contentSize;
-      this.payLineScript.initTilePos(this.numberOfReels, this.reelScript.noOfTiles, size);
 
-      this.scheduleOnce(() => {
-        this.payLineScript.createLine();
-        this.payLineScript.setNodePosition(new Vec3(-1 * (this.node.getComponent(UITransform).width / 2), -1 * ((this.node.getComponent(UITransform).height / 2) + 45), 0))
-      }, this.numberOfReels + 1)
-    }
-    this.hudScript.spinButtonInteraction(true);
-    for (let i = 0; i < this.numberOfReels; i += 1) {
-      const spinDelay = i * 1.2;
-      const theReel: any = this.reels[i].getComponent(this.reelScriptName);
-      this.scheduleOnce(() => {
-        theReel.readyStop();
-      }, spinDelay);
+  showPayline() {
+    let size = this.node.getComponent(UITransform).contentSize;
+    this.payLineScript.initTilePos(this.numberOfReels, this.reelScript.noOfTiles, size);
+
+    this.scheduleOnce(() => {
+      this.payLineScript.createLine();
+      this.payLineScript.setNodePosition(new Vec3(-1 * (this.node.getComponent(UITransform).width / 2), -1 * ((this.node.getComponent(UITransform).height / 2) + 45), 0))
+    }, this.numberOfReels + 1)
+
+  }
+
+  stop() {
+    this.showPayline();
+
+
+    if (this.ReelSpin.name == ANIMATION_TYPES.REELSPIN) {
+      this.hudScript.spinButtonInteraction(true);
+      for (let i = 0; i < this.numberOfReels; i += 1) {
+        const spinDelay = i * 1.2;
+        const theReel: any = this.reels[i].getComponent(this.reelScriptName);
+        this.scheduleOnce(() => {
+          theReel.readyStop();
+        }, spinDelay);
+      }
     }
   }
 
 
   drop(): void {
+    this.payLineScript.clearPaylines();
 
+    this.scheduleOnce(() => {
+      this.stop();
+
+    }, 1)
     // this.spinning = true;
     for (let i = 0; i < this.numberOfReels; i += 1) {
       this.scheduleOnce(() => {
@@ -123,6 +135,7 @@ export class Machine extends Component {
 
 
   spin() {
+    this.payLineScript.clearPaylines();
     this.scheduleOnce(() => {
       this.stop();
     }, 5)

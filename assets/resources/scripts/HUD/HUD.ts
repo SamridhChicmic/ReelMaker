@@ -21,7 +21,7 @@ export class HUD extends Component {
 
     play(event) {
         console.log(event);
-        this.spinButtonInteraction(false)
+        // this.spinButtonInteraction(false)
         this.slotDelegate.spin();
     }
 
