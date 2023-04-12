@@ -24,7 +24,7 @@ export class ReelDrop extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 5;
+    noOfTiles = 4;
 
 
     //----------------------------------------------------------onLoad()--------------------------------------------------------------------
@@ -45,12 +45,10 @@ export class ReelDrop extends Component {
      * @description this function is used to create reel using tiles 
      */
     createReel(reelNum: number, tileSize): number {
-        // let this.newTile: Node;
         this.tile = instantiate(this.tilePrefab);
         this.tile.getComponent(UITransform).height = tileSize.Height;
         this.tile.getComponent(UITransform).width = tileSize.Width;
         this.reelNumber = reelNum;
-
         this.node.getComponent(UITransform).height = ((this.noOfTiles - 2) * this.tile.getComponent(UITransform).height);
 
         for (let i = 0; i < this.noOfTiles; i++) {
@@ -66,11 +64,7 @@ export class ReelDrop extends Component {
             // this.reelAnchor.height = 1125;
             this.ReelMask.getComponent(UITransform).height = this.reelAnchor.getComponent(UITransform).height;
             this.maskedHeight = (this.reelAnchor.getComponent(UITransform).height - this.node.getComponent(UITransform).height);
-
-
-
             this.tiles[i] = this.newTile;
-
         }
 
         return this.ReelMask.getComponent(UITransform).height;

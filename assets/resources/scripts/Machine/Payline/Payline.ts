@@ -15,12 +15,15 @@ export class Payline extends Component {
     popUpAnimation: Node = null;
 
     popUpScript = null;
-    payLineData = [0, 9];
-
     paylineDimensions = null;
+
+    //-------------------Containes data for showing paylines----------------
+    payLineData = [0, 11, 14];
+    //----------------------------------------------------------------------
+
+
     start() {
         this.popUpScript = this.popUpAnimation.getComponent(Animation_1);
-
     }
 
 
@@ -28,9 +31,8 @@ export class Payline extends Component {
         this.node.setPosition(pos);
         this.popUpScript.setNodePosition(pos)
     }
+
     createLine() {
-
-
         let graphicComponent = this.node.getComponent(Graphics);
         graphicComponent.lineWidth = 10;
         let startPoint = 0
@@ -48,7 +50,6 @@ export class Payline extends Component {
         graphicComponent.lineTo(endPoint, pos[1]);
         graphicComponent.moveTo(endPoint, pos[1]);
         graphicComponent.stroke();
-
     }
 
     clearPaylines() {
@@ -56,6 +57,7 @@ export class Payline extends Component {
         graphicComponent.clear();
         this.popUpScript.stopAnimation();
     }
+
     initTilePos(reelNo, tileNo, size, reel) {
 
         let tileNumber = tileNo;
@@ -63,33 +65,17 @@ export class Payline extends Component {
             tileNumber = tileNo - 2;
         }
         this.node.getComponent(UITransform).contentSize = size;
-        console.log("container size", size);
         this.paylineDimensions = size;
         let halfTileH = this.paylineDimensions.height / ((tileNumber) * 2);
         let halfTileW = this.paylineDimensions.width / (reelNo * 2);
 
         for (let j = tileNumber; j > 0; j--) {
             for (let i = 1; i <= reelNo; i++) {
-
                 this.tilePos.push([(this.paylineDimensions.width / reelNo) * i - halfTileW, (this.paylineDimensions.height / (tileNumber)) * j - halfTileH]);
             }
         }
-
-        console.log(this.tilePos, "Tile position array");
-
     }
 
-    isActive() {
-        return this.node.active;
-    }
-
-    inactivePayline() {
-        this.node.active = false;
-    }
-
-    activePayline() {
-        this.node.active = true;
-    }
 
     update(deltaTime: number) {
 

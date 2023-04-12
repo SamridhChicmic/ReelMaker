@@ -163,7 +163,7 @@ export class ReelSpin extends Component {
             const start = tween(element).by(
                 0.5,
                 { position: new Vec3(0, (this.maskedHeight * 0.5) * this.dirModifier, 0) },
-                { easing: "backIn" }
+                { easing: "bounceIn" }
             );
             const doChange = tween().call(() => this.changeCallback(element));
             const callSpinning = tween(element).call(() => this.doSpinning(element, 5));

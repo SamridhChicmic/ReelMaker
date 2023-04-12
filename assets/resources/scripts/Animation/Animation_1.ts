@@ -10,8 +10,9 @@ export class Animation_1 extends Component {
     popUpNode = null;
     poolSize = 15;
     popupPool = new NodePool();
-    protected onLoad(): void {
 
+
+    protected onLoad(): void {
         resources.loadDir("sprites/Drumscompressed", SpriteFrame, (err, dir) => {
             if (!err) {
                 this.drumsArray = dir;
@@ -20,6 +21,8 @@ export class Animation_1 extends Component {
             }
         })
     }
+
+
     start() {
         for (let index = 0; index < this.poolSize; index++) {
             let PopupNode = instantiate(this.popUpPrefab);
@@ -27,9 +30,15 @@ export class Animation_1 extends Component {
         }
 
     }
+
+
+
     setNodePosition(pos) {
         this.node.setPosition(pos);
     }
+
+
+
     playAnimation(x, y) {
         console.log("this.popupPool.size", this.popupPool.size())
         if (this.popupPool.size()) {
@@ -43,7 +52,6 @@ export class Animation_1 extends Component {
             anim.repeatCount = 100;
             anim.play()
         }
-
     }
 
     stopAnimation() {
@@ -53,10 +61,7 @@ export class Animation_1 extends Component {
                 this.popupPool.put(instantiate(this.popUpPrefab))
                 node.destroy();
             })
-
         }
-
-
     }
 
 
