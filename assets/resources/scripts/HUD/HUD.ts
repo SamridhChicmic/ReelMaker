@@ -1,5 +1,6 @@
 import { _decorator, Button, Component, Node } from 'cc';
-import { Machine } from '../Machine';
+
+import { Slot } from '../Slot';
 const { ccclass, property } = _decorator;
 
 @ccclass('HUD')
@@ -9,14 +10,14 @@ export class HUD extends Component {
     spinButton: Node = null;
 
 
-    slotDelegate: Machine = null;
+    slotDelegate: Slot = null;
 
-    set setSlotDelegate(machine) {
-        this.slotDelegate = machine;
+    set setSlotDelegate(slot) {
+        this.slotDelegate = slot;
     }
 
     start() {
-
+        
     }
 
     play(event) {

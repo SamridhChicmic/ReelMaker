@@ -19,7 +19,7 @@ export class Machine extends Component {
 
   @property(Node) public paylineBg: Node = null;
 
-  public numberOfReels = 7;
+  public numberOfReels = 5;
   Reel: Prefab = null;
   reelScriptName = null;
   setTOut = 0;
@@ -38,9 +38,6 @@ export class Machine extends Component {
   start() {
     this.payLineScript = this.paylineBg.getComponent(Payline);
     this.createMachine("ReelSpin", this.tileSize);
-
-
-
 
   }
 
@@ -89,11 +86,11 @@ export class Machine extends Component {
 
   showPayline() {
     let size = this.node.getComponent(UITransform).contentSize;
-    this.payLineScript.initTilePos(this.numberOfReels, this.reelScript.noOfTiles, size);
+    this.payLineScript.initTilePos(this.numberOfReels, this.reelScript.noOfTiles, size, this.reelScriptName);
 
     this.scheduleOnce(() => {
       this.payLineScript.createLine();
-      this.payLineScript.setNodePosition(new Vec3(-1 * (this.node.getComponent(UITransform).width / 2), -1 * ((this.node.getComponent(UITransform).height / 2) + 45), 0))
+      this.payLineScript.setNodePosition(new Vec3(-1 * (this.node.getComponent(UITransform).width / 2), -1 * ((this.node.getComponent(UITransform).height / 2)), 0))
     }, this.numberOfReels + 1)
 
   }

@@ -24,7 +24,7 @@ export class ReelDrop extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 4;
+    noOfTiles = 5;
 
 
     //----------------------------------------------------------onLoad()--------------------------------------------------------------------
@@ -72,7 +72,8 @@ export class ReelDrop extends Component {
             this.tiles[i] = this.newTile;
 
         }
-        return this.node.getComponent(UITransform).height;
+
+        return this.ReelMask.getComponent(UITransform).height;
 
     }
 

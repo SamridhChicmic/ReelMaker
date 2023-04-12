@@ -1,4 +1,6 @@
 import { _decorator, Component, Graphics, Node, Rect, UITransform, Vec2, Vec3 } from 'cc';
+import { Animation_1 } from '../../Animation/Animation_1';
+import { ANIMATION_TYPES } from '../../AnimationTypes';
 const { ccclass, property } = _decorator;
 
 @ccclass('Payline')
@@ -9,17 +11,22 @@ export class Payline extends Component {
     @property(Node)
     payLineBG: Node = null!;
 
-    payLineData = [0, 9, 5];
+    @property(Node)
+    popUpAnimation: Node = null;
+
+    popUpScript = null;
+    payLineData = [0, 9];
 
     paylineDimensions = null;
     start() {
-
+        this.popUpScript = this.popUpAnimation.getComponent(Animation_1);
 
     }
 
 
     setNodePosition(pos) {
         this.node.setPosition(pos);
+        this.popUpScript.setNodePosition(pos)
     }
     createLine() {
 
@@ -34,6 +41,7 @@ export class Payline extends Component {
         graphicComponent.moveTo(startPoint, pos[1]);
         for (let i = 0; i < this.payLineData.length; i++) {
             pos = this.tilePos[this.payLineData[i]];
+            this.popUpScript.playAnimation(pos[0], pos[1]);
             graphicComponent.lineTo(pos[0], pos[1]);
             graphicComponent.moveTo(pos[0], pos[1]);
         }
@@ -46,17 +54,24 @@ export class Payline extends Component {
     clearPaylines() {
         let graphicComponent = this.node.getComponent(Graphics);
         graphicComponent.clear();
+        this.popUpScript.stopAnimation();
     }
-    initTilePos(reelNo, tileNo, size) {
+    initTilePos(reelNo, tileNo, size, reel) {
+
+        let tileNumber = tileNo;
+        if (ANIMATION_TYPES.REELSPIN == reel) {
+            tileNumber = tileNo - 2;
+        }
         this.node.getComponent(UITransform).contentSize = size;
         console.log("container size", size);
         this.paylineDimensions = size;
-        let halfTileH = this.paylineDimensions.height / (tileNo * 2);
+        let halfTileH = this.paylineDimensions.height / ((tileNumber) * 2);
         let halfTileW = this.paylineDimensions.width / (reelNo * 2);
 
-        for (let j = tileNo - 2; j > 0; j--) {
+        for (let j = tileNumber; j > 0; j--) {
             for (let i = 1; i <= reelNo; i++) {
-                this.tilePos.push([(this.paylineDimensions.width / reelNo) * i - halfTileW, (this.paylineDimensions.height / (tileNo - 2)) * j - halfTileH]);
+
+                this.tilePos.push([(this.paylineDimensions.width / reelNo) * i - halfTileW, (this.paylineDimensions.height / (tileNumber)) * j - halfTileH]);
             }
         }
 
