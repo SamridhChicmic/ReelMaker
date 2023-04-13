@@ -1,4 +1,5 @@
 import { _decorator, AnimationClip, Component, Label, Node, Sprite, SpriteFrame, tween, Vec2, Vec3 } from 'cc';
+import { gameData } from '../Common/gameData';
 
 
 const { ccclass, property } = _decorator;
@@ -11,8 +12,10 @@ export class Tile extends Component {
     }
 
 
+
     setTile(Num: SpriteFrame) {
 
+        
         this.node.getComponent(Sprite).spriteFrame = Num;
         // this.node.getChildByName("tileNum").getComponent(Label).string = Num.toString();
     }

@@ -1,5 +1,6 @@
 import { _decorator, animation, Component, director, instantiate, Label, Layers, Layout, log, Node, NodePool, Prefab, randomRangeInt, SpriteFrame, tween, UI, UITransform, Vec3 } from 'cc';
 import { Tile } from '../Tile';
+import { gameData } from '../../Common/gameData';
 
 const { ccclass, property } = _decorator;
 
@@ -73,6 +74,7 @@ export class ReelSpin extends Component {
     //-------------------------------------------------------------changeCallback()----------------------------------------------------------------
 
     resultArray = [1, 2, 3];
+    tileCount = 0;
     /**
      * 
      * @param element 
@@ -98,8 +100,26 @@ export class ReelSpin extends Component {
 
                 num = this.resultSprites.pop();//randomRangeInt(1, this.noOfTiles + 1
 
+
+
+
+
+
+
+
+                gameData.getInstance().pushTileRef([element.getWorldPosition(), element])
+
+
+
+
+
+
+
+
+                this.tileCount++;
+                tileScript.setTile(num);
             }
-            tileScript.setTile(num);
+
             element.position = new Vec3(0, (this.maskedHeight * this.dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
         }
     }
@@ -186,6 +206,7 @@ export class ReelSpin extends Component {
 
 
     doStop(element) {
+
 
         this.dirModifier = -1;
         const move = tween(element).by(0.05, { position: new Vec3(0, (this.maskedHeight * 0.5), 0) });

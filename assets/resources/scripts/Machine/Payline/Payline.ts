@@ -1,6 +1,7 @@
 import { _decorator, Component, Graphics, Node, Rect, UITransform, Vec2, Vec3 } from 'cc';
 import { Animation_1 } from '../../Animation/Animation_1';
 import { ANIMATION_TYPES } from '../../AnimationTypes';
+import { gameData } from '../../Common/gameData';
 const { ccclass, property } = _decorator;
 
 @ccclass('Payline')
@@ -16,13 +17,14 @@ export class Payline extends Component {
 
     popUpScript = null;
     paylineDimensions = null;
-
+    tileRef = [];
     //-------------------Containes data for showing paylines----------------
-    payLineData = [0, 11, 14];
+    payLineData = [7];
     //----------------------------------------------------------------------
 
 
     start() {
+
         this.popUpScript = this.popUpAnimation.getComponent(Animation_1);
     }
 
@@ -33,6 +35,7 @@ export class Payline extends Component {
     }
 
     createLine() {
+        this.tileRef = gameData.getInstance().getTileRefArr();
         let graphicComponent = this.node.getComponent(Graphics);
         graphicComponent.lineWidth = 10;
         let startPoint = 0
@@ -43,7 +46,7 @@ export class Payline extends Component {
         graphicComponent.moveTo(startPoint, pos[1]);
         for (let i = 0; i < this.payLineData.length; i++) {
             pos = this.tilePos[this.payLineData[i]];
-            this.popUpScript.playAnimation(pos[0], pos[1]);
+            this.popUpScript.playAnimation(pos[0], pos[1], this.tileRef[this.payLineData[i]]);
             graphicComponent.lineTo(pos[0], pos[1]);
             graphicComponent.moveTo(pos[0], pos[1]);
         }
@@ -59,7 +62,6 @@ export class Payline extends Component {
     }
 
     initTilePos(reelNo, tileNo, size, reel) {
-
         let tileNumber = tileNo;
         if (ANIMATION_TYPES.REELSPIN == reel) {
             tileNumber = tileNo - 2;
@@ -75,6 +77,8 @@ export class Payline extends Component {
             }
         }
     }
+
+
 
 
     update(deltaTime: number) {

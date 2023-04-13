@@ -1,4 +1,4 @@
-import { _decorator, Animation, animation, AnimationClip, Component, instantiate, log, Node, NodePool, Prefab, resources, SpriteFrame } from 'cc';
+import { _decorator, Animation, animation, AnimationClip, Component, instantiate, log, Node, NodePool, Prefab, resources, Sprite, SpriteFrame, UITransform } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Animation_1')
@@ -39,7 +39,12 @@ export class Animation_1 extends Component {
 
 
 
-    playAnimation(x, y) {
+    playAnimation(x, y, node) {
+        // node[1].getComponent(Sprite).enabled = false;
+        console.log("Tile Node in animation", node);
+        node[1].parent.active = false;
+
+
         console.log("this.popupPool.size", this.popupPool.size())
         if (this.popupPool.size()) {
             let node = this.popupPool.get();

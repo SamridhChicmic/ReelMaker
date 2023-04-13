@@ -37,7 +37,7 @@ export class Machine extends Component {
 
   start() {
     this.payLineScript = this.paylineBg.getComponent(Payline);
-    this.createMachine("ReelDrop", this.tileSize);
+    this.createMachine("ReelSpin", this.tileSize);
 
   }
 
