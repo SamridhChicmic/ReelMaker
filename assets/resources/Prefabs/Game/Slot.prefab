@@ -516,8 +516,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -854.004,
-      "y": -330.846,
+      "x": -960.098,
+      "y": -539.246,
       "z": 0
     },
     "_lrot": {
@@ -556,8 +556,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1720,
-      "height": 675
+      "width": 1920,
+      "height": 1080
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -692,6 +692,9 @@
     },
     "Machine": {
       "__id__": 10
+    },
+    "popUpAnimationNodeRef": {
+      "__id__": 22
     },
     "_id": ""
   },

@@ -28,8 +28,21 @@ export class ReelSpin extends Component {
     resultShow = false;
     dirModifier = 1;
     resultSprites = []
-
-
+    tileData: boolean = null;
+    numInView = -1;
+    allWinTile = [7];
+    public numInViewArr =
+        [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24]];
+    // [[10, 5, 0],   
+    // [11, 6, 1],
+    // [12, 7, 2],
+    // [13, 8, 3],
+    // [14, 9, 4]];
+    // [[0, 5, 10],
+    // [1, 6, 11],
+    // [2, 7, 12],
+    // [3, 8, 13],
+    // [4, 9, 14]];
     protected onLoad(): void {
         this.resultSprites = [...this.tileSprites];
 
@@ -79,6 +92,7 @@ export class ReelSpin extends Component {
      * @description this function is used to Reposition the tiles 
      */
     changeCallback(element: Node = null): void {
+
         this.dirModifier = -1;
         let check = 0;
         if (this.noOfTiles > 5) {
@@ -97,9 +111,21 @@ export class ReelSpin extends Component {
                 // console.log("resulArray REfilled");
 
                 num = this.resultSprites.pop();//randomRangeInt(1, this.noOfTiles + 1
+                this.numInView++;
+                if (this.tileData) {
+                    // console.log("ReelNumber", this.reelNumber, "NuminView", this.numInView);
+                    // console.log("payline value", e, "Array value", this.numInViewArr[this.reelNumber][this.numInView])
+                    let payline = this.allWinTile.find((e) => e == (this.numInViewArr[this.reelNumber][this.numInView]));
 
+                    if (payline >= 0) {
+                        this.scheduleOnce(() => {
+                            tileScript.playAnimation(this.node)
+                        }, 2)
+                    }
+                }
             }
             tileScript.setTile(num);
+
             element.position = new Vec3(0, (this.maskedHeight * this.dirModifier) - ((element.getComponent(UITransform).height * (visibleTalesManager)) * 0.5), 0);
         }
     }
@@ -157,6 +183,7 @@ export class ReelSpin extends Component {
      */
     doSpin(windUp): void {
         this.dirModifier = 1
+        this.tileData = false;
         this.reelAnchor.children.forEach((element) => {
 
             const delay = tween(element).delay(windUp);
@@ -177,6 +204,7 @@ export class ReelSpin extends Component {
 
     readyStop() {
         this.stopSpinning = true;
+        this.tileData = true
         this.resultShow = true;
 
     }
@@ -198,7 +226,11 @@ export class ReelSpin extends Component {
             0.25,
             { position: new Vec3(0, ((this.maskedHeight * 0.5) * this.dirModifier) + element.getComponent(UITransform).height, 0) },
             { easing: "bounceOut" }
-        ).call(() => { this.stopSpinning = false; this.resultShow = false; this.resultSprites = [...this.tileSprites]; })
+        ).call(() => {
+            this.numInView = -1;
+            this.stopSpinning = false; this.resultShow = false; this.resultSprites = [...this.tileSprites];
+
+        })
         let result = tween(element).call(() => {
             this.resultShow = true;
 

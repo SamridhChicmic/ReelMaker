@@ -1,4 +1,4 @@
-import { _decorator, Animation, animation, AnimationClip, Component, instantiate, log, Node, NodePool, Prefab, resources, SpriteFrame } from 'cc';
+import { _decorator, Animation, animation, AnimationClip, Component, instantiate, log, Node, NodePool, Prefab, resources, SpriteFrame, UITransform } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Animation_1')
@@ -16,7 +16,6 @@ export class Animation_1 extends Component {
         resources.loadDir("sprites/Drumscompressed", SpriteFrame, (err, dir) => {
             if (!err) {
                 this.drumsArray = dir;
-
                 console.log(this.drumsArray)
             }
         })
@@ -39,11 +38,12 @@ export class Animation_1 extends Component {
 
 
 
-    playAnimation(x, y) {
-        console.log("this.popupPool.size", this.popupPool.size())
+    playAnimation(tileNode, reelNode) {
+        // console.log("this.popupPool.size", this.popupPool.size())
         if (this.popupPool.size()) {
             let node = this.popupPool.get();
-            node.setPosition(x, y);
+            console.log("Tile node from animation script", tileNode.getWorldPosition());
+            node.setPosition(tileNode.getWorldPosition().x, tileNode.getWorldPosition().y);
             this.node.addChild(node);
             let clip = AnimationClip.createWithSpriteFrames(this.drumsArray, this.drumsArray.length);
             let animation = node.getComponent(Animation);

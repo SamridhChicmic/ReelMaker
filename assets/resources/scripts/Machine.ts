@@ -37,7 +37,7 @@ export class Machine extends Component {
 
   start() {
     this.payLineScript = this.paylineBg.getComponent(Payline);
-    this.createMachine("ReelDrop", this.tileSize);
+    this.createMachine("ReelSpin", this.tileSize);
 
   }
 
@@ -75,7 +75,7 @@ export class Machine extends Component {
       this.reels[i] = this.newReel;
       this.reelScript = this.newReel.getComponent(this.reelScriptName);
       this.node.getComponent(UITransform).height = this.reelScript.createReel(i, this.tileSize);
-      // reelScript.shuffle();
+
     }
   }
 
