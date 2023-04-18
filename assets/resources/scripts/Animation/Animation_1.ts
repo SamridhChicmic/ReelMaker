@@ -1,4 +1,5 @@
-import { _decorator, Animation, animation, AnimationClip, Component, instantiate, log, Node, NodePool, Prefab, resources, Sprite, SpriteFrame, UITransform } from 'cc';
+import { _decorator, Animation, animation, AnimationClip, Component, instantiate, Label, log, Node, NodePool, Prefab, resources, Sprite, SpriteFrame, UITransform } from 'cc';
+import { gameData } from '../Common/gameData';
 const { ccclass, property } = _decorator;
 
 @ccclass('Animation_1')
@@ -10,8 +11,9 @@ export class Animation_1 extends Component {
     popUpNode = null;
     poolSize = 15;
     popupPool = new NodePool();
-
-
+    rowAnimationNode = null;
+    tileRef = null;
+    tileparent = null;
     protected onLoad(): void {
         resources.loadDir("sprites/Drumscompressed", SpriteFrame, (err, dir) => {
             if (!err) {
@@ -37,12 +39,25 @@ export class Animation_1 extends Component {
         this.node.setPosition(pos);
     }
 
+    // 0 : Row Animation  1: Column Animation  2 : None
+    animationType = 0;
 
+    playAnimation(x, y, nodeIndex) {
 
-    playAnimation(x, y, node) {
-        // node[1].getComponent(Sprite).enabled = false;
-        console.log("Tile Node in animation", node);
-        node[1].parent.active = false;
+        this.tileRef = gameData.getInstance().getTileRefArr();
+        this.tileparent = this.tileRef[nodeIndex][1].parent;
+        if (this.animationType == 1) {
+            console.log("tileRef----", this.tileRef);
+            let tileNum = this.tileparent.children.length;
+            for (let i = 4; i <= this.tileRef.length; i += tileNum - 2) {
+                this.tileRef[i][1].getComponent(Sprite).spriteFrame = null;
+            }
+        } else if (this.animationType == 0) {
+            this.tileparent.children.forEach((e) => {
+                e.active = false;
+            })
+        }
+
 
 
         console.log("this.popupPool.size", this.popupPool.size())
@@ -60,6 +75,11 @@ export class Animation_1 extends Component {
     }
 
     stopAnimation() {
+        if (this.tileparent != null) {
+            this.tileparent.children.forEach((e) => {
+                e.active = true;
+            })
+        }
         while (this.node.children.length > 0) {
             let node = this.node.children.pop();
             setTimeout(() => {

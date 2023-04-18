@@ -353,7 +353,15 @@
         "__expectedType__": "cc.SpriteFrame"
       },
       {
+        "__uuid__": "dc95eaf8-8977-4f9b-9098-3d9349188496@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
         "__uuid__": "5989e7b5-0af1-4159-9a1b-1ff42d59db52@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "45775654-2e2e-45c2-ae93-a4f2ee8656ba@f9941",
         "__expectedType__": "cc.SpriteFrame"
       }
     ],

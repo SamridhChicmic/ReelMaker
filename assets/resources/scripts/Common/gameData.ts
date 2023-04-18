@@ -21,6 +21,7 @@ export class gameData {
 
 
     tileRef = []
+    tileRefOriginal =[];
 
     pushTileRef(data) {
         this.tileRef.push(data);
@@ -38,5 +39,9 @@ export class gameData {
     get initTileRef() {
         return this.tileRef;
     }
+
+    
+
+   
 }
 

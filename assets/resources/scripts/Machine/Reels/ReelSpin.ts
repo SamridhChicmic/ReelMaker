@@ -15,7 +15,7 @@ export class ReelSpin extends Component {
     @property({ type: SpriteFrame })
     tileSprites: SpriteFrame[] = [];
 
-    public spinSpeed = 0.05;
+    public spinSpeed = 0.06;
     public stopSpinning = false;
     private tiles = [];
 
@@ -45,6 +45,7 @@ export class ReelSpin extends Component {
      * @description this function is used to create reel using tiles 
      */
     createReel(reelNum: number, tileSize): number {
+
         this.tile = instantiate(this.tilePrefab);
         this.tile.getComponent(UITransform).height = tileSize.Height;
         this.tile.getComponent(UITransform).width = tileSize.Width;

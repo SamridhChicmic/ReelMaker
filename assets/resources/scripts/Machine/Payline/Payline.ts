@@ -19,7 +19,7 @@ export class Payline extends Component {
     paylineDimensions = null;
     tileRef = [];
     //-------------------Containes data for showing paylines----------------
-    payLineData = [7];
+    payLineData = [4];
     //----------------------------------------------------------------------
 
 
@@ -46,7 +46,7 @@ export class Payline extends Component {
         graphicComponent.moveTo(startPoint, pos[1]);
         for (let i = 0; i < this.payLineData.length; i++) {
             pos = this.tilePos[this.payLineData[i]];
-            this.popUpScript.playAnimation(pos[0], pos[1], this.tileRef[this.payLineData[i]]);
+            this.popUpScript.playAnimation(pos[0], pos[1], this.payLineData[i]);
             graphicComponent.lineTo(pos[0], pos[1]);
             graphicComponent.moveTo(pos[0], pos[1]);
         }
@@ -71,9 +71,9 @@ export class Payline extends Component {
         let halfTileH = this.paylineDimensions.height / ((tileNumber) * 2);
         let halfTileW = this.paylineDimensions.width / (reelNo * 2);
 
-        for (let j = tileNumber; j > 0; j--) {
-            for (let i = 1; i <= reelNo; i++) {
-                this.tilePos.push([(this.paylineDimensions.width / reelNo) * i - halfTileW, (this.paylineDimensions.height / (tileNumber)) * j - halfTileH]);
+        for (let j = 1; j <= reelNo; j++) {
+            for (let i = tileNumber; i > 0; i--) {
+                this.tilePos.push([(this.paylineDimensions.width / reelNo) * j - halfTileW, (this.paylineDimensions.height / (tileNumber)) * i - halfTileH]);
             }
         }
     }
