@@ -46,7 +46,7 @@ export class Payline extends Component {
         graphicComponent.moveTo(startPoint, pos[1]);
         for (let i = 0; i < this.payLineData.length; i++) {
             pos = this.tilePos[this.payLineData[i]];
-            this.popUpScript.playAnimation(pos[0], pos[1], this.payLineData[i]);
+            // this.popUpScript.playAnimation(pos[0], pos[1], this.payLineData[i]);
             graphicComponent.lineTo(pos[0], pos[1]);
             graphicComponent.moveTo(pos[0], pos[1]);
         }
@@ -58,7 +58,7 @@ export class Payline extends Component {
     clearPaylines() {
         let graphicComponent = this.node.getComponent(Graphics);
         graphicComponent.clear();
-        this.popUpScript.stopAnimation();
+        // this.popUpScript.stopAnimation();
     }
 
     initTilePos(reelNo, tileNo, size, reel) {

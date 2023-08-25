@@ -33,6 +33,7 @@ export class ReelSpin extends Component {
 
     protected onLoad(): void {
         this.resultSprites = [...this.tileSprites];
+        console.log("resulArray REfilled", this.resultSprites);
 
     }
 
@@ -97,7 +98,7 @@ export class ReelSpin extends Component {
 
             let num = this.resultSprites[0];
             if (this.resultShow == true && this.resultSprites.length > 0) {
-                // console.log("resulArray REfilled");
+
 
                 num = this.resultSprites.pop();//randomRangeInt(1, this.noOfTiles + 1
 
@@ -184,7 +185,7 @@ export class ReelSpin extends Component {
             const start = tween(element).by(
                 0.5,
                 { position: new Vec3(0, (this.maskedHeight * 0.5) * this.dirModifier, 0) },
-                { easing: "bounceIn" }
+
             );
             const doChange = tween().call(() => this.changeCallback(element));
             const callSpinning = tween(element).call(() => this.doSpinning(element, 5));

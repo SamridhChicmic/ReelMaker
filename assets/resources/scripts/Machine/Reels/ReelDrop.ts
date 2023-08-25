@@ -24,7 +24,7 @@ export class ReelDrop extends Component {
     maskedHeight;
     tile;
     tileAdjustor = 0;
-    noOfTiles = 4;
+    noOfTiles = 6;
 
 
     //----------------------------------------------------------onLoad()--------------------------------------------------------------------

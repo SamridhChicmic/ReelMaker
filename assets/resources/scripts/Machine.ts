@@ -19,7 +19,7 @@ export class Machine extends Component {
 
   @property(Node) public paylineBg: Node = null;
 
-  public numberOfReels = 5;
+  public numberOfReels = 6;
   Reel: Prefab = null;
   reelScriptName = null;
   setTOut = 0;
