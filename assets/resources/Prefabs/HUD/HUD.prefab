@@ -497,7 +497,7 @@
     },
     "component": "",
     "_componentId": "615c3Hd6LlBEIeMTuDl1IF5",
-    "handler": "play",
+    "handler": "spinButtonClicked",
     "customEventData": ""
   },
   {

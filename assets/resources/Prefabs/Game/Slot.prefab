@@ -380,9 +380,13 @@
       "__uuid__": "2a892090-8d45-4f04-8f26-af9b5bd5b132",
       "__expectedType__": "cc.Prefab"
     },
+    "NumberOfReels": 5,
     "paylineBg": {
       "__id__": 17
     },
+    "TileHeight": 100,
+    "TileWidth": 100,
+    "Reeltype": 1,
     "machineBackground": {
       "__id__": 2
     },
