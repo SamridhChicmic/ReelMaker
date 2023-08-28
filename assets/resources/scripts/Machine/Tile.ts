@@ -1,5 +1,5 @@
 import { _decorator, AnimationClip, Component, Label, Node, Sprite, SpriteFrame, tween, Vec2, Vec3 } from "cc";
-import { gameData } from "../Common/gameData";
+
 
 const { ccclass, property } = _decorator;
 

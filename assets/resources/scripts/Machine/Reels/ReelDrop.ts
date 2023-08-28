@@ -17,6 +17,7 @@ import {
   Vec3,
 } from "cc";
 import { Tile } from "../Tile";
+import { Machine } from "../../Machine";
 
 const { ccclass, property } = _decorator;
 
@@ -42,12 +43,9 @@ export class ReelDrop extends Component {
   tile;
   tileAdjustor = 0;
   noOfTiles = 7;
-
-  //----------------------------------------------------------onLoad()--------------------------------------------------------------------
+  MachineDelegate: Machine = null;
 
   protected onLoad(): void {}
-
-  //----------------------------------------------------------createReel()--------------------------------------------------------------------
 
   /**
    *
@@ -80,8 +78,6 @@ export class ReelDrop extends Component {
     return this.ReelMask.getComponent(UITransform).height;
   }
 
-  //----------------------------------------------------------changeCallback()--------------------------------------------------------------------
-
   resultArray = [7, 8, 9, 10, 11];
 
   /**
@@ -113,26 +109,24 @@ export class ReelDrop extends Component {
 
   /**
    *
-   * @param windUp
+   * @param
    * @description used to spin the tiles using tween
    */
-  doSpin(windUp): void {
-    for (let i = this.reelAnchor.children.length - 1; i >= 0; i--) {
-      let element = this.reelAnchor.children[i];
+  doSpin(): void {
+    for (let index = this.reelAnchor.children.length - 1; index >= 0; index--) {
+      let element = this.reelAnchor.children[index];
       let direction = -1;
-      const delay = tween(element).delay((this.reelAnchor.children.length + 1 - i) * 0.2);
+      const delay = tween(element).delay((this.reelAnchor.children.length + 1 - index) * 0.2);
       const doChange = tween().call(() => {
         this.changeCallback(element);
-        this.scheduleOnce(() => {
-          this.spinAgain();
-        }, 1.5);
       });
       const start = tween(element).by(0.3, { position: new Vec3(0, this.maskedHeight * 2 * direction, 0) }); //time = 0.8
       delay.then(start).then(doChange).start(); //then(doChange)
     }
+    this.scheduleOnce(() => {
+      this.spinAgain();
+    }, 2.5);
   }
-
-  //----------------------------------------------------------spinAgain()--------------------------------------------------------------------
 
   spinAgain() {
     console.log("spinAgain called");
@@ -158,7 +152,9 @@ export class ReelDrop extends Component {
   //     }
   // }
 
-  //----------------------------------------------------------readyStop()--------------------------------------------------------------------
+  /**
+   * @ Checks For Stop Reel
+   */
 
   readyStop() {
     this.stopSpinning = true;
@@ -180,5 +176,9 @@ export class ReelDrop extends Component {
         { easing: "bounceOut" }
       )
       .start();
+  }
+  // Setting Delegate
+  set SettingMachineDelegate(Machine) {
+    this.MachineDelegate = Machine;
   }
 }

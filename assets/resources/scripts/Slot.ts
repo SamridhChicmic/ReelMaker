@@ -20,28 +20,6 @@ export class Slot extends Component {
     this.hudScript.setSlotDelegate = this;
     this.hudScript.setMachineDelegate = this.Machine.getComponent(Machine).MachineDelegate;
   }
-
-  spin() {
-    // Checking Which Animation
-    let MachineScript = this.Machine.getComponent(Machine);
-    let ReelAnimationName = MachineScript.ReelAnimationName;
-
-    switch (ReelAnimationName) {
-      case ANIMATION_TYPES.REELSPIN:
-        MachineScript.spin();
-        break;
-      case ANIMATION_TYPES.REELDROP:
-        MachineScript.drop();
-    }
-    // if (machineScript.reelScriptName == ANIMATION_TYPES.REELSPIN) {
-    //   machineScript.spin();
-    // } else {
-    //   machineScript.drop();
-    // }
-    // }
-    MachineScript.hudScriptCatcher(this.hudScript);
-  }
-
   start() {}
 
   update(deltaTime: number) {}

@@ -60,8 +60,11 @@ export class Machine extends Component {
   get MachineDelegate() {
     return this;
   }
+  /**
+   * This Function Call After Spin Button Clicked 
+   * Delegate Use in HUD
+   */
   reelAnimation() {
-    console.log("Button Clicked");
     switch (this.Reeltype) {
       case REELTYPE.REELSPIN:
         this.spin();
@@ -102,6 +105,7 @@ export class Machine extends Component {
       this.reels[index] = this.newReel;
       this.reelScript = this.newReel.getComponent(this.ReelAnimationName);
       console.log("Script", this.reelScript);
+      this.reelScript.SettingMachineDelegate = this;
       this.node.getComponent(UITransform).height = this.reelScript.createReel(index, this.tileSize);
       // reelScript.shuffle();
     }
@@ -132,9 +136,9 @@ export class Machine extends Component {
 
     if (this.ReelSpin.name == ANIMATION_TYPES.REELSPIN) {
       this.hudScript.spinButtonInteraction(true);
-      for (let i = 0; i < this.NumberOfReels; i += 1) {
-        const spinDelay = i * 1.2;
-        const theReel: any = this.reels[i].getComponent(this.ReelAnimationName);
+      for (let index = 0; index < this.NumberOfReels; index++) {
+        const spinDelay = index * 1.2;
+        const theReel: any = this.reels[index].getComponent(this.ReelAnimationName);
         this.scheduleOnce(() => {
           theReel.readyStop();
         }, spinDelay);
@@ -163,11 +167,19 @@ export class Machine extends Component {
       this.stop();
     }, 5);
 
-    for (let i = 0; i < this.NumberOfReels; i += 1) {
-      const theReel: any = this.reels[i].getComponent(this.ReelAnimationName);
+    for (let index = 0; index < this.NumberOfReels; index += 1) {
+      const theReel: any = this.reels[index].getComponent(this.ReelAnimationName);
       theReel.doSpin(0.03);
     }
   }
 
+  /// Need to fix 
+  
+  SpinAgainInteraction(reelnumber) {
+    console.log("check", this.NumberOfReels, reelnumber);
+    if (this.NumberOfReels == reelnumber) {
+      this.hudScript.spinButtonInteraction(true);
+    }
+  }
   update(deltaTime: number) {}
 }

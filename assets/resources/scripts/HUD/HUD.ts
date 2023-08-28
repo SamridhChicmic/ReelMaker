@@ -19,13 +19,14 @@ export class HUD extends Component {
   }
   start() {}
   spinButtonClicked(event) {
-    // this.spinButtonInteraction(false)
+    this.spinButtonInteraction(false);
     //this.slotDelegate.spin();
-    this.MachineDelegate.reelAnimation();
     this.MachineDelegate.hudScriptCatcher(this);
+    this.MachineDelegate.reelAnimation();
   }
 
   spinButtonInteraction(interaction) {
+    console.log("Intract", interaction);
     this.spinButton.getComponent(Button).interactable = interaction;
   }
 

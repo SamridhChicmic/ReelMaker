@@ -20,6 +20,7 @@ import {
 } from "cc";
 import { Tile } from "../Tile";
 import { gameData } from "../../Common/gameData";
+import { Machine } from "../../Machine";
 
 const { ccclass, property } = _decorator;
 
@@ -44,17 +45,19 @@ export class ReelSpin extends Component {
   maskedHeight;
   tile;
   tileAdjustor = 0;
-  noOfTiles = 8;
+  noOfTiles = 7;
   resultShow = false;
   dirModifier = 1;
   resultSprites = [];
-
+  MachineDelegate: Machine = null;
   protected onLoad(): void {
     this.resultSprites = [...this.tileSprites];
     console.log("resulArray REfilled", this.resultSprites);
   }
-
-  //----------------------------------------------------------createReel()--------------------------------------------------------------------
+  // Setting Delegate
+  set SettingMachineDelegate(Machine) {
+    this.MachineDelegate = Machine;
+  }
 
   /**
    *
@@ -85,8 +88,6 @@ export class ReelSpin extends Component {
 
     return this.node.getComponent(UITransform).height;
   }
-
-  //-------------------------------------------------------------changeCallback()----------------------------------------------------------------
 
   resultArray = [1, 2, 3];
   tileCount = 0;
@@ -128,8 +129,6 @@ export class ReelSpin extends Component {
     }
   }
 
-  //-----------------------------------------------------------checkEndCallback()-------------------------------------------------------------------
-
   /**
    *
    * @param element
@@ -143,8 +142,6 @@ export class ReelSpin extends Component {
     }
   }
 
-  //------------------------------------------------------------------doSpinning()--------------------------------------------------------------------
-
   doSpinning(element: Node = null, times = 1): void {
     this.dirModifier = 1;
     const move = tween().by(this.spinSpeed, { position: new Vec3(0, this.maskedHeight * 0.5 * this.dirModifier, 0) });
@@ -154,12 +151,11 @@ export class ReelSpin extends Component {
 
     const repeat = tween(element).repeat(times, move.then(doChange));
     const checkEnd = tween().call(() => {
+      console.log("Repeat");
       this.checkEndCallback(element);
     });
     repeat.then(checkEnd).start();
   }
-
-  //------------------------------------------------------------doSpin()--------------------------------------------------------------------
 
   /**
    *
@@ -177,14 +173,19 @@ export class ReelSpin extends Component {
     });
   }
 
-  //--------------------------------------------------------------readyStop()--------------------------------------------------------------------
+  /**
+   * @ Checks For Stop Reel
+   */
 
   readyStop() {
     this.stopSpinning = true;
     this.resultShow = true;
   }
 
-  //-----------------------------------------------------------doStop()-------------------------------------------------------------------
+  /**
+   * @des Stops Every Tile
+   * @param element Tiles
+   */
 
   doStop(element) {
     this.dirModifier = -1;
@@ -213,45 +214,45 @@ export class ReelSpin extends Component {
     let result = tween(element).call(() => {
       this.resultShow = true;
     });
+    // Didnt UnderStand Why this we are doing
+    // switch (this.noOfTiles) {
+    //   case 4:
+    move.then(doChange).then(move).then(doChange).then(end).start();
+    //     break;
+    //   case 5:
+    //     move.then(doChange).then(move).then(doChange).then(lastMove).then(doChange).then(end).start();
+    //     break;
 
-    switch (this.noOfTiles) {
-      case 4:
-        move.then(doChange).then(move).then(doChange).then(end).start();
-        break;
-      case 5:
-        move.then(doChange).then(move).then(doChange).then(lastMove).then(doChange).then(end).start();
-        break;
+    //   case 6:
+    //     move
+    //       .then(doChange)
+    //       .then(move)
+    //       .then(doChange)
+    //       .then(lastMove)
+    //       .then(doChange)
+    //       .then(lastMove)
+    //       .then(doChange)
+    //       .then(end)
+    //       .start();
+    //     break;
 
-      case 6:
-        move
-          .then(doChange)
-          .then(move)
-          .then(doChange)
-          .then(lastMove)
-          .then(doChange)
-          .then(lastMove)
-          .then(doChange)
-          .then(end)
-          .start();
-        break;
+    //   case 7:
+    //     move
+    //       .then(doChange)
+    //       .then(move)
+    //       .then(doChange)
+    //       .then(lastMove)
+    //       .then(doChange)
+    //       .then(lastMove)
+    //       .then(doChange)
+    //       .then(lastMove)
+    //       .then(doChange)
+    //       .then(end)
+    //       .start();
+    //     break;
 
-      case 7:
-        move
-          .then(doChange)
-          .then(move)
-          .then(doChange)
-          .then(lastMove)
-          .then(doChange)
-          .then(lastMove)
-          .then(doChange)
-          .then(lastMove)
-          .then(doChange)
-          .then(end)
-          .start();
-        break;
-
-      default:
-        break;
-    }
+    //   default:
+    //     break;
+    // }
   }
 }
