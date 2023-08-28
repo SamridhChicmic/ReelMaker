@@ -61,7 +61,7 @@ export class Machine extends Component {
     return this;
   }
   /**
-   * This Function Call After Spin Button Clicked 
+   * This Function Call After Spin Button Clicked
    * Delegate Use in HUD
    */
   reelAnimation() {
@@ -134,15 +134,18 @@ export class Machine extends Component {
   stop() {
     this.showPayline();
 
-    if (this.ReelSpin.name == ANIMATION_TYPES.REELSPIN) {
-      this.hudScript.spinButtonInteraction(true);
-      for (let index = 0; index < this.NumberOfReels; index++) {
-        const spinDelay = index * 1.2;
-        const theReel: any = this.reels[index].getComponent(this.ReelAnimationName);
-        this.scheduleOnce(() => {
-          theReel.readyStop();
-        }, spinDelay);
-      }
+    switch (this.Reeltype) {
+      case REELTYPE.REELSPIN:
+        console.log("STOP", this.Reel.name);
+        this.hudScript.spinButtonInteraction(true);
+        for (let index = 0; index < this.NumberOfReels; index++) {
+          const spinDelay = index * 1.2;
+          const theReel: any = this.reels[index].getComponent(this.ReelAnimationName);
+          this.scheduleOnce(() => {
+            theReel.readyStop();
+          }, spinDelay);
+        }
+        break;
     }
   }
 
@@ -173,8 +176,8 @@ export class Machine extends Component {
     }
   }
 
-  /// Need to fix 
-  
+  /// Need to fix //--good to go for ReelDrop
+
   SpinAgainInteraction(reelnumber) {
     console.log("check", this.NumberOfReels, reelnumber);
     if (this.NumberOfReels == reelnumber) {

@@ -386,7 +386,7 @@
     },
     "TileHeight": 100,
     "TileWidth": 100,
-    "Reeltype": 1,
+    "Reeltype": 0,
     "machineBackground": {
       "__id__": 2
     },

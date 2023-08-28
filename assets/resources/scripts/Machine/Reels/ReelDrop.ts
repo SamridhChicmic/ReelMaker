@@ -125,7 +125,7 @@ export class ReelDrop extends Component {
     }
     this.scheduleOnce(() => {
       this.spinAgain();
-    }, 2.5);
+    }, (this.reelAnchor.children.length + 1) * 0.2);
   }
 
   spinAgain() {
@@ -141,6 +141,7 @@ export class ReelDrop extends Component {
       const start = tween(element).to(0.2, { position: new Vec3(0, position, 0) }); //time = 0.8 (this.maskedHeight + (element.getComponent(UITransform).height * (this.reelAnchor.children.length - 1))) * direction
       delay.then(start).start(); //then(doChange)
     }
+    this.MachineDelegate.SpinAgainInteraction(this.reelNumber + 1);
   }
 
   //----------------------------------------------------------stopDrop()--------------------------------------------------------------------

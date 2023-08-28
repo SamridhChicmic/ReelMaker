@@ -188,6 +188,7 @@ export class ReelSpin extends Component {
    */
 
   doStop(element) {
+    console.log("Do Stop");
     this.dirModifier = -1;
     const move = tween(element).by(0.05, { position: new Vec3(0, this.maskedHeight * 0.5, 0) });
     const lastMove = tween().by(0.05, { position: new Vec3(0, element.getComponent(UITransform).height, 0) });
@@ -217,7 +218,7 @@ export class ReelSpin extends Component {
     // Didnt UnderStand Why this we are doing
     // switch (this.noOfTiles) {
     //   case 4:
-    move.then(doChange).then(move).then(doChange).then(end).start();
+    // move.then(doChange).then(move).then(doChange).then(end).start();
     //     break;
     //   case 5:
     //     move.then(doChange).then(move).then(doChange).then(lastMove).then(doChange).then(end).start();
