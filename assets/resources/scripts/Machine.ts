@@ -50,7 +50,7 @@ export class Machine extends Component {
   @property(Node)
   machineBackground = null;
 
-  payLineScript = null;
+  payLineScript:Payline = null;
   protected onLoad(): void {}
 
   start() {
@@ -104,7 +104,7 @@ export class Machine extends Component {
       this.node.addChild(this.newReel);
       this.reels[index] = this.newReel;
       this.reelScript = this.newReel.getComponent(this.ReelAnimationName);
-      console.log("Script", this.reelScript);
+   //   console.log("Script", this.reelScript);
       this.reelScript.SettingMachineDelegate = this;
       this.node.getComponent(UITransform).height = this.reelScript.createReel(index, this.tileSize);
       // reelScript.shuffle();
@@ -136,7 +136,7 @@ export class Machine extends Component {
 
     switch (this.Reeltype) {
       case REELTYPE.REELSPIN:
-        console.log("STOP", this.Reel.name);
+     //   console.log("STOP", this.Reel.name);
         //  this.hudScript.spinButtonInteraction(true);
         for (let index = 0; index < this.NumberOfReels; index++) {
           const spinDelay = index * 1.2;
@@ -176,10 +176,9 @@ export class Machine extends Component {
     }
   }
 
-  /// Need to fix //--good to go for ReelDrop
 
   SpinAgainInteraction(reelnumber) {
-    console.log("check", this.NumberOfReels, reelnumber);
+   // console.log("check", this.NumberOfReels, reelnumber);
     if (this.NumberOfReels == reelnumber) {
       this.hudScript.spinButtonInteraction(true);
     }

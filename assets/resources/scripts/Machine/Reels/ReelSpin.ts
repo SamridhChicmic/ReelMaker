@@ -152,7 +152,7 @@ export class ReelSpin extends Component {
 
     const repeat = tween(element).repeat(times, move.then(doChange));
     const checkEnd = tween().call(() => {
-      console.log("Repeat");
+      //   console.log("Repeat");
       this.checkEndCallback(element, index);
     });
     repeat.then(checkEnd).start();
@@ -190,7 +190,7 @@ export class ReelSpin extends Component {
    */
 
   doStop(element, index) {
-    console.log("Do Stop");
+    //  console.log("Do Stop");
     this.dirModifier = -1;
     const move = tween(element).by(0.05, { position: new Vec3(0, this.maskedHeight * 0.5, 0) });
     const lastMove = tween().by(0.05, { position: new Vec3(0, element.getComponent(UITransform).height, 0) });
