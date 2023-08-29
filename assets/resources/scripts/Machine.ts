@@ -137,7 +137,7 @@ export class Machine extends Component {
     switch (this.Reeltype) {
       case REELTYPE.REELSPIN:
         console.log("STOP", this.Reel.name);
-        this.hudScript.spinButtonInteraction(true);
+        //  this.hudScript.spinButtonInteraction(true);
         for (let index = 0; index < this.NumberOfReels; index++) {
           const spinDelay = index * 1.2;
           const theReel: any = this.reels[index].getComponent(this.ReelAnimationName);

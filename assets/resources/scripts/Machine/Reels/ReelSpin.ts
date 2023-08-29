@@ -131,18 +131,19 @@ export class ReelSpin extends Component {
 
   /**
    *
-   * @param element
    * @description used to check when to stop the spin of a particular Reel
+   * @param element
+   *  @param Index Tile Index - for Check Which Tile is Stopped
    */
-  checkEndCallback(element: Node = null): void {
+  checkEndCallback(element: Node = null, index): void {
     if (this.stopSpinning) {
-      this.doStop(element);
+      this.doStop(element, index);
     } else {
-      this.doSpinning(element);
+      this.doSpinning(element, index);
     }
   }
 
-  doSpinning(element: Node = null, times = 1): void {
+  doSpinning(element: Node = null, index, times = 1): void {
     this.dirModifier = 1;
     const move = tween().by(this.spinSpeed, { position: new Vec3(0, this.maskedHeight * 0.5 * this.dirModifier, 0) });
     const doChange = tween().call(() => {
@@ -152,7 +153,7 @@ export class ReelSpin extends Component {
     const repeat = tween(element).repeat(times, move.then(doChange));
     const checkEnd = tween().call(() => {
       console.log("Repeat");
-      this.checkEndCallback(element);
+      this.checkEndCallback(element, index);
     });
     repeat.then(checkEnd).start();
   }
@@ -164,11 +165,11 @@ export class ReelSpin extends Component {
    */
   doSpin(windUp): void {
     this.dirModifier = 1;
-    this.reelAnchor.children.forEach((element) => {
+    this.reelAnchor.children.forEach((element, index) => {
       const delay = tween(element).delay(windUp);
       const start = tween(element).by(0.5, { position: new Vec3(0, this.maskedHeight * 0.5 * this.dirModifier, 0) });
       const doChange = tween().call(() => this.changeCallback(element));
-      const callSpinning = tween(element).call(() => this.doSpinning(element, 5));
+      const callSpinning = tween(element).call(() => this.doSpinning(element, index, 5));
       delay.then(start).then(doChange).then(callSpinning).start();
     });
   }
@@ -185,9 +186,10 @@ export class ReelSpin extends Component {
   /**
    * @des Stops Every Tile
    * @param element Tiles
+   * @param Index Tile Index - for Check Which Tile is Stopped
    */
 
-  doStop(element) {
+  doStop(element, index) {
     console.log("Do Stop");
     this.dirModifier = -1;
     const move = tween(element).by(0.05, { position: new Vec3(0, this.maskedHeight * 0.5, 0) });
@@ -211,6 +213,12 @@ export class ReelSpin extends Component {
         this.stopSpinning = false;
         this.resultShow = false;
         this.resultSprites = [...this.tileSprites];
+        //Send Call to Make Spin Button Interactive When Reel Stop
+        // Adding one to make tile index to tile count
+        if (index + 1 == this.noOfTiles) {
+          // Adding One to Make Reel index to Reel Count
+          this.MachineDelegate.SpinAgainInteraction(this.reelNumber + 1);
+        }
       });
     let result = tween(element).call(() => {
       this.resultShow = true;
@@ -218,7 +226,7 @@ export class ReelSpin extends Component {
     // Didnt UnderStand Why this we are doing
     // switch (this.noOfTiles) {
     //   case 4:
-    // move.then(doChange).then(move).then(doChange).then(end).start();
+    move.then(doChange).then(move).then(doChange).then(end).start();
     //     break;
     //   case 5:
     //     move.then(doChange).then(move).then(doChange).then(lastMove).then(doChange).then(end).start();
