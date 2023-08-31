@@ -1,7 +1,7 @@
 import { _decorator, Component, Graphics, Node, Rect, UITransform, Vec2, Vec3 } from "cc";
 import { Animation_1 } from "../../Animation/Animation_1";
-import { ANIMATION_TYPES } from "../../AnimationTypes";
 import { gameData } from "../../Common/gameData";
+import { REEL_ANIMATION_TYPE } from "../../Common/constant";
 const { ccclass, property } = _decorator;
 
 @ccclass("Payline")
@@ -18,7 +18,7 @@ export class Payline extends Component {
   paylineDimensions = null;
   tileRef = [];
   //-------------------Containes data for showing paylines----------------
-  payLineData = [8];
+  payLineData = [8,11];
   //----------------------------------------------------------------------
 
   start() {
@@ -62,9 +62,9 @@ export class Payline extends Component {
     this.popUpScript.stopAnimation();
   }
 
-  initTilePos(reelnumber, tilenumber, contentsize, reelanimation) {
+  initTilePos(reelnumber, tilenumber, contentsize, reelSpinType) {
     let tileNumber = tilenumber;
-    if (ANIMATION_TYPES.REELSPIN == reelanimation) {
+    if (REEL_ANIMATION_TYPE.REELSPIN == reelSpinType) {
       // Masked Tile
       tileNumber = tilenumber - 2;
     }

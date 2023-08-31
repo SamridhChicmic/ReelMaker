@@ -1,7 +1,6 @@
 import { _decorator, Component, instantiate, Node, Prefab } from "cc";
 import { HUD } from "./HUD/HUD";
 import { Machine } from "./Machine";
-import { ANIMATION_TYPES } from "./AnimationTypes";
 const { ccclass, property } = _decorator;
 
 @ccclass("Slot")

@@ -17,6 +17,7 @@ import {
   Vec3,
 } from "cc";
 import { gameData } from "../Common/gameData";
+import { ANIMATION_TYPE } from "../Common/constant";
 const { ccclass, property } = _decorator;
 
 @ccclass("Animation_1")
@@ -52,20 +53,19 @@ export class Animation_1 extends Component {
     this.node.setPosition(pos);
   }
 
-  // 0 : Row Animation  1: Column Animation  2 : None
-  animationType = 1;
+  animationType = ANIMATION_TYPE.COLOMN;
 
   playAnimation(x, y, nodeIndex) {
     this.tileRef = gameData.getInstance().getTileRefArr();
     console.log("Reference-->", this.tileRef, nodeIndex, " Ref Tile Length", this.tileRef.length);
-    if (this.animationType == 0) {
+    if (this.animationType == ANIMATION_TYPE.ROW) {
       this.rowAnimChildArray = [];
       for (let reel = 0; reel < this.tileRef.length; reel++) {
         let rowIndex = nodeIndex % this.tileRef[0].length;
         this.hideRow(this.tileRef[reel], rowIndex);
       }
-    } else if (this.animationType == 1) {
-      let reelNumber = Math.floor(nodeIndex / this.tileRef.length);
+    } else if (this.animationType == ANIMATION_TYPE.COLOMN) {
+      let reelNumber = Math.floor(nodeIndex/this.tileRef[0].length)
       // As tile Ref conatain Position of tile and Tile Node
       let reelTiles = this.tileRef[reelNumber][0];
       this.tileparent = reelTiles[1].parent;
