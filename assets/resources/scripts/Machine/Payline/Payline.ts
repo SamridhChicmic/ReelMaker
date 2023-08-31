@@ -18,7 +18,7 @@ export class Payline extends Component {
   paylineDimensions = null;
   tileRef = [];
   //-------------------Containes data for showing paylines----------------
-  payLineData = [8,11];
+  payLineData = [1,8,11,15];
   //----------------------------------------------------------------------
 
   start() {

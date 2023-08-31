@@ -29,7 +29,7 @@ export class Animation_1 extends Component {
   popUpNode = null;
   poolSize = 15;
   popupPool = new NodePool();
-  rowAnimChildArray: Node[] = [];
+  AnimChildArray: Node[] = [];
   tileRef = null;
   tileparent = null;
   protected onLoad(): void {
@@ -53,25 +53,26 @@ export class Animation_1 extends Component {
     this.node.setPosition(pos);
   }
 
-  animationType = ANIMATION_TYPE.COLOMN;
+  animationType = ANIMATION_TYPE.ROW;
 
   playAnimation(x, y, nodeIndex) {
     this.tileRef = gameData.getInstance().getTileRefArr();
     console.log("Reference-->", this.tileRef, nodeIndex, " Ref Tile Length", this.tileRef.length);
+    //  this.AnimChildArray = [];
     if (this.animationType == ANIMATION_TYPE.ROW) {
-      this.rowAnimChildArray = [];
       for (let reel = 0; reel < this.tileRef.length; reel++) {
         let rowIndex = nodeIndex % this.tileRef[0].length;
         this.hideRow(this.tileRef[reel], rowIndex);
       }
     } else if (this.animationType == ANIMATION_TYPE.COLOMN) {
-      let reelNumber = Math.floor(nodeIndex/this.tileRef[0].length)
+      let reelNumber = Math.floor(nodeIndex / this.tileRef[0].length);
       // As tile Ref conatain Position of tile and Tile Node
       let reelTiles = this.tileRef[reelNumber][0];
       this.tileparent = reelTiles[1].parent;
       console.log("Reelno", reelNumber, "parent", this.tileparent);
-      this.tileparent.children.forEach((e) => {
-        e.active = false;
+      this.tileparent.children.forEach((nodes) => {
+        nodes.setScale(new Vec3(0, 0, 0));
+        this.AnimChildArray.push(nodes);
       });
     }
     console.log("this.popupPool.size", this.popupPool.size());
@@ -90,20 +91,16 @@ export class Animation_1 extends Component {
   hideRow(visiblereel, reelindex) {
     console.log("Visibile reel", visiblereel, "reelindex", reelindex, "node", visiblereel[reelindex][1]);
     visiblereel[reelindex][1].setScale(new Vec3(0, 0, 0));
-    this.rowAnimChildArray.push(visiblereel[reelindex][1]);
+    this.AnimChildArray.push(visiblereel[reelindex][1]);
   }
-  restoreRowNodes() {
-    this.rowAnimChildArray.forEach((rownode) => {
+  restoreNodes() {
+    this.AnimChildArray.forEach((rownode) => {
       rownode.setScale(new Vec3(1, 1, 1));
     });
+    this.AnimChildArray = [];
   }
   stopAnimation() {
-    this.restoreRowNodes();
-    if (this.tileparent != null) {
-      this.tileparent.children.forEach((e) => {
-        e.active = true;
-      });
-    }
+    this.restoreNodes();
     while (this.node.children.length > 0) {
       let node = this.node.children.pop();
       setTimeout(() => {

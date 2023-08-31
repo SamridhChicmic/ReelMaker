@@ -45,7 +45,7 @@ export class ReelSpin extends Component {
   maskedHeight;
   tile;
   tileAdjustor = 0;
-  noOfTiles = 6;
+  noOfTiles = 7;
   resultShow = false;
   dirModifier = 1;
   resultSprites = [];
