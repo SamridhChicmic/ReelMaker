@@ -18,7 +18,7 @@ export class Payline extends Component {
   paylineDimensions = null;
   tileRef = [];
   //-------------------Containes data for showing paylines----------------
-  payLineData = [7, 3, 11, 14];
+  payLineData = [8];
   //----------------------------------------------------------------------
 
   start() {
@@ -29,11 +29,14 @@ export class Payline extends Component {
     this.node.setPosition(pos);
     this.popUpScript.setNodePosition(pos);
   }
-
+  /**
+   * Create a payline using payLineData array which contain tile index
+   * line start from startpoint to paylinedata tile index's to endpoint
+   */
   createLine() {
+    //Dont Know why its Used here
     // this.tileRef = gameData.getInstance().getTileRefArr();
     // console.log("Tile Ref--->", this.tileRef);
-    console.log("CreateLine", this.tilePos);
     let graphicComponent = this.node.getComponent(Graphics);
     graphicComponent.lineWidth = 10;
     let startPoint = 0;
@@ -44,7 +47,7 @@ export class Payline extends Component {
     graphicComponent.moveTo(startPoint, pos[1]);
     for (let i = 0; i < this.payLineData.length; i++) {
       pos = this.tilePos[this.payLineData[i]];
-      // this.popUpScript.playAnimation(pos[0], pos[1], this.payLineData[i]);
+      this.popUpScript.playAnimation(pos[0], pos[1], this.payLineData[i]);
       graphicComponent.lineTo(pos[0], pos[1]);
       graphicComponent.moveTo(pos[0], pos[1]);
     }
@@ -56,26 +59,26 @@ export class Payline extends Component {
   clearPaylines() {
     let graphicComponent = this.node.getComponent(Graphics);
     graphicComponent.clear();
-    // this.popUpScript.stopAnimation();
+    this.popUpScript.stopAnimation();
   }
 
-  initTilePos(reelNo, tileNo, size, reel) {
-    let tileNumber = tileNo;
-    if (ANIMATION_TYPES.REELSPIN == reel) {
+  initTilePos(reelnumber, tilenumber, contentsize, reelanimation) {
+    let tileNumber = tilenumber;
+    if (ANIMATION_TYPES.REELSPIN == reelanimation) {
       // Masked Tile
-      tileNumber = tileNo - 2;
+      tileNumber = tilenumber - 2;
     }
-    this.node.getComponent(UITransform).contentSize = size;
-    this.paylineDimensions = size;
+    this.node.getComponent(UITransform).contentSize = contentsize;
+    this.paylineDimensions = contentsize;
     // half Width and Height of Each tile
-    let halfTileH = this.paylineDimensions.height / (tileNumber * 2);
-    let halfTileW = this.paylineDimensions.width / (reelNo * 2);
-
-    for (let j = 1; j <= reelNo; j++) {
-      for (let i = tileNumber; i > 0; i--) {
+    let HalfTileHeight = this.paylineDimensions.height / (tileNumber * 2);
+    let HalfTileWidth = this.paylineDimensions.width / (reelnumber * 2);
+    // here we are pushing tile index position which is visible in reel
+    for (let reelcount = 1; reelcount <= reelnumber; reelcount++) {
+      for (let tilecount = tileNumber; tilecount > 0; tilecount--) {
         this.tilePos.push([
-          (this.paylineDimensions.width / reelNo) * j - halfTileW,
-          (this.paylineDimensions.height / tileNumber) * i - halfTileH,
+          (this.paylineDimensions.width / reelnumber) * reelcount - HalfTileWidth,
+          (this.paylineDimensions.height / tileNumber) * tilecount - HalfTileHeight,
         ]);
       }
     }

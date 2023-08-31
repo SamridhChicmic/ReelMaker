@@ -45,10 +45,11 @@ export class ReelSpin extends Component {
   maskedHeight;
   tile;
   tileAdjustor = 0;
-  noOfTiles = 7;
+  noOfTiles = 6;
   resultShow = false;
   dirModifier = 1;
   resultSprites = [];
+  visiblereel: any[] = [];
   MachineDelegate: Machine = null;
   protected onLoad(): void {
     this.resultSprites = [...this.tileSprites];
@@ -114,9 +115,12 @@ export class ReelSpin extends Component {
       let num = this.resultSprites[0];
       if (this.resultShow == true && this.resultSprites.length > 0) {
         num = this.resultSprites.pop(); //randomRangeInt(1, this.noOfTiles + 1
-
-        gameData.getInstance().pushTileRef([element.getWorldPosition(), element]);
-
+        this.visiblereel.push([element.getWorldPosition(), element]);
+        if (this.visiblereel.length == this.noOfTiles - 2) {
+          console.log("Print-->");
+          gameData.getInstance().pushTileRef(this.visiblereel);
+          this.visiblereel = [];
+        }
         this.tileCount++;
         tileScript.setTile(num);
       }
@@ -164,6 +168,9 @@ export class ReelSpin extends Component {
    * @description used to spin the tiles using tween
    */
   doSpin(windUp): void {
+    //Tile ref Empty for EveryNewSpin
+    gameData.getInstance().initTileRef = [];
+    this.visiblereel = [];
     this.dirModifier = 1;
     this.reelAnchor.children.forEach((element, index) => {
       const delay = tween(element).delay(windUp);
@@ -224,44 +231,45 @@ export class ReelSpin extends Component {
       this.resultShow = true;
     });
     // Didnt UnderStand Why this we are doing
-    // switch (this.noOfTiles) {
-    //   case 4:
-    move.then(doChange).then(move).then(doChange).then(end).start();
-    //     break;
-    //   case 5:
-    //     move.then(doChange).then(move).then(doChange).then(lastMove).then(doChange).then(end).start();
-    //     break;
+    // here we used cases because of the result tile sprite change accordingly
+    switch (this.noOfTiles) {
+      case 4:
+        move.then(doChange).then(move).then(doChange).then(end).start();
+        break;
+      case 5:
+        move.then(doChange).then(move).then(doChange).then(lastMove).then(doChange).then(end).start();
+        break;
 
-    //   case 6:
-    //     move
-    //       .then(doChange)
-    //       .then(move)
-    //       .then(doChange)
-    //       .then(lastMove)
-    //       .then(doChange)
-    //       .then(lastMove)
-    //       .then(doChange)
-    //       .then(end)
-    //       .start();
-    //     break;
+      case 6:
+        move
+          .then(doChange)
+          .then(move)
+          .then(doChange)
+          .then(lastMove)
+          .then(doChange)
+          .then(lastMove)
+          .then(doChange)
+          .then(end)
+          .start();
+        break;
 
-    //   case 7:
-    //     move
-    //       .then(doChange)
-    //       .then(move)
-    //       .then(doChange)
-    //       .then(lastMove)
-    //       .then(doChange)
-    //       .then(lastMove)
-    //       .then(doChange)
-    //       .then(lastMove)
-    //       .then(doChange)
-    //       .then(end)
-    //       .start();
-    //     break;
+      case 7:
+        move
+          .then(doChange)
+          .then(move)
+          .then(doChange)
+          .then(lastMove)
+          .then(doChange)
+          .then(lastMove)
+          .then(doChange)
+          .then(lastMove)
+          .then(doChange)
+          .then(end)
+          .start();
+        break;
 
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+    }
   }
 }

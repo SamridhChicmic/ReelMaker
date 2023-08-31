@@ -18,6 +18,7 @@ import {
 } from "cc";
 import { Tile } from "../Tile";
 import { Machine } from "../../Machine";
+import { gameData } from "../../Common/gameData";
 
 const { ccclass, property } = _decorator;
 
@@ -113,6 +114,8 @@ export class ReelDrop extends Component {
    * @description used to spin the tiles using tween
    */
   doSpin(): void {
+    //Tile ref Empty for EveryNewSpin
+    gameData.getInstance().initTileRef = [];
     for (let index = this.reelAnchor.children.length - 1; index >= 0; index--) {
       let element = this.reelAnchor.children[index];
       let direction = -1;
